@@ -51,7 +51,7 @@ function Sidebar() {
             {
                 Menue.map((item) => (
 
-                    <li key={item.id} className="py-1">
+                    <li key={item.id} className="my-3">
                         <Link href={item.path}>
                         <span className={`flex gap-3 p-2 rounded-md ${path === item.path ? "bg-primary text-white hover:bg-primary hover:text-white" : "hover:bg-gray-100 hover:text-black"}`}>
                             <div className="text-2xl">{item.icon}</div>
