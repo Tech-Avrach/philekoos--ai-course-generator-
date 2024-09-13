@@ -1,6 +1,7 @@
 "use client"
 
 import Image from 'next/image'
+import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import React from 'react'
 import { HiOutlineHome, HiOutlineSquare3Stack3D, HiOutlineCreditCard, HiOutlineArrowRightOnRectangle } from "react-icons/hi2";
@@ -50,10 +51,12 @@ function Sidebar() {
                 Menue.map((item) => (
 
                     <li key={item.id} className="py-1">
-                        <a href={item.path} className={`flex gap-3 p-2 rounded-md hover:bg-gray-100 hover:text-black ${path === item.path ? "bg-primary text-white" : ""}`}>
+                        <Link href={item.path}>
+                        <span className={`flex gap-3 p-2 rounded-md ${path === item.path ? "bg-primary text-white hover:bg-primary hover:text-white" : "hover:bg-gray-100 hover:text-black"}`}>
                             <div className="text-2xl">{item.icon}</div>
                             <span>{item.name}</span>
-                        </a>
+                        </span>
+                        </Link>
                     </li>
                 ))
             }
