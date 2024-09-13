@@ -1,9 +1,15 @@
 import React from 'react'
+import Sidebar from './_components/Sidebar'
 
 function DashboardLayout({children}) {
   return (
     <div>
-        {children}
+        <div className="md:w-64 hidden md:block">
+        <Sidebar />
+        </div>
+        <div className="md:ml-64">
+            {children}
+        </div>
     </div>
   )
 }
