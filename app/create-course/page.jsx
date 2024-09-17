@@ -10,6 +10,11 @@ import { UserInputContext } from '../_context/UserInputContext'
 import toast from 'react-hot-toast';
 import { GenerateCourseLayout } from '@/configs/AiModel'
 import LoadingDialog from './_components/LoadingDialog'
+import { db } from '@/configs/db'
+
+import { v4 as uuidv4 } from 'uuid';
+import { useUser } from '@clerk/nextjs'
+import { CourseList } from '@/configs/schema'
 
 function CreateCourse() {
   const StepperOptions = [{
@@ -36,6 +41,11 @@ function CreateCourse() {
   const [activeIndex, setActiveIndex] = useState(0)
 
   const [loading, setLoading] = useState(false)
+
+  const { user } = useUser();
+
+  console.log(uuidv4());
+
 
   useEffect(() => {
     console.log(userCourseInput)
@@ -111,16 +121,50 @@ function CreateCourse() {
   
       console.log("result", JSON.parse(result.response?.text()))
 
+      SaveCourseLayoutInDb(JSON.parse(result.response?.text()));
+
     } catch (error) {
       
+      setLoading(false)
       toast.error("Something went wrong. Please try again", {
         className: "border border-primary",
       })
       
+    }
+
+  }
+
+  const SaveCourseLayoutInDb = async (courseLayout) => {
+    
+    try {
+      setLoading(true)
+
+      var id = uuidv4();
+      const result = await db.insert(CourseList).values({
+        courseId: id,
+        name: userCourseInput?.topic,
+        category: userCourseInput?.category,
+        level: userCourseInput?.level,
+        courseOutput: courseLayout,
+        createdBy: user?.primaryEmailAddress?.emailAddress,
+        userName: user?.fullName,
+        userProfileImage: user?.imageUrl
+      })
+      
+    } catch (error) {
+      console.log("Storing Layout to database : ", error)
+
+      toast.error("Something went wrong. Please try again", {
+        className: "border border-primary",
+      })
+
+
     } finally {
       setLoading(false)
     }
+    
 
+    setLoading(false)
   }
 
 
