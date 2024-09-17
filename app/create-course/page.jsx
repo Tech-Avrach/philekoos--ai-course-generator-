@@ -8,6 +8,7 @@ import TopicDescription from './_components/TopicDescription'
 import SelectOption from './_components/SelectOption'
 import { UserInputContext } from '../_context/UserInputContext'
 import toast from 'react-hot-toast';
+import { GenerateCourseLayout } from '@/configs/AiModel'
 
 function CreateCourse() {
   const StepperOptions = [{
@@ -53,8 +54,11 @@ function CreateCourse() {
       })
       return;
     }
-    
-    else if(activeIndex === 2) {
+    setActiveIndex((prevIndex) => prevIndex + 1)
+  }
+
+  const HandleGenerateCourseLayout = async () => {
+    if(activeIndex === 2) {
 
       if(!userCourseInput?.level) {
         toast("Please select a Difficulty level", {
@@ -85,8 +89,21 @@ function CreateCourse() {
       }
     }
 
+    const BASIC_PROMPT = "Generate A Course Tutorial on Following Detail With fiels as Course Name, Description, Along With Chapter Name, about, Duration."
 
-    setActiveIndex((prevIndex) => prevIndex + 1)
+    const USER_INPUT_PROMPT = `Category: ${userCourseInput?.category}, Topic: ${userCourseInput?.topic}, Level: ${userCourseInput?.level}, Duration: ${userCourseInput?.duration}, NoOfChapters: ${userCourseInput?.noOfChapters}`
+
+    const FINAL_PROMPT = `${BASIC_PROMPT} ${USER_INPUT_PROMPT} In JSON Format.`
+
+    console.log("FINAL_PROMPT", FINAL_PROMPT)
+
+
+    const result = await GenerateCourseLayout.sendMessage(FINAL_PROMPT)
+    console.log(result.response?.text());
+
+    console.log("result", JSON.parse(result.response?.text()))
+
+
   }
 
 
@@ -142,7 +159,7 @@ function CreateCourse() {
         }
 
         {
-          activeIndex == StepperOptions.length - 1 && <Button onClick={() =>  handleNextButton()} >Generate Course Layout</Button>
+          activeIndex == StepperOptions.length - 1 && <Button onClick={() =>  HandleGenerateCourseLayout()} >Generate Course Layout</Button>
         }
       </div>
 
