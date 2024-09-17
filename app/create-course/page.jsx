@@ -9,6 +9,7 @@ import SelectOption from './_components/SelectOption'
 import { UserInputContext } from '../_context/UserInputContext'
 import toast from 'react-hot-toast';
 import { GenerateCourseLayout } from '@/configs/AiModel'
+import LoadingDialog from './_components/LoadingDialog'
 
 function CreateCourse() {
   const StepperOptions = [{
@@ -33,6 +34,8 @@ function CreateCourse() {
   const { userCourseInput, setUserCourseInput } = useContext(UserInputContext);
 
   const [activeIndex, setActiveIndex] = useState(0)
+
+  const [loading, setLoading] = useState(false)
 
   useEffect(() => {
     console.log(userCourseInput)
@@ -89,20 +92,34 @@ function CreateCourse() {
       }
     }
 
-    const BASIC_PROMPT = "Generate A Course Tutorial on Following Detail With fiels as Course Name, Description, Along With Chapter Name, about, Duration."
 
-    const USER_INPUT_PROMPT = `Category: ${userCourseInput?.category}, Topic: ${userCourseInput?.topic}, Level: ${userCourseInput?.level}, Duration: ${userCourseInput?.duration}, NoOfChapters: ${userCourseInput?.noOfChapters}`
+    try {
 
-    const FINAL_PROMPT = `${BASIC_PROMPT} ${USER_INPUT_PROMPT} In JSON Format.`
+      setLoading(true)
 
-    console.log("FINAL_PROMPT", FINAL_PROMPT)
+      const BASIC_PROMPT = "Generate A Course Tutorial on Following Detail With fiels as Course Name, Description, Along With Chapter Name, about, Duration."
 
+      const USER_INPUT_PROMPT = `Category: ${userCourseInput?.category}, Topic: ${userCourseInput?.topic}, Level: ${userCourseInput?.level}, Duration: ${userCourseInput?.duration}, NoOfChapters: ${userCourseInput?.noOfChapters}`
+  
+      const FINAL_PROMPT = `${BASIC_PROMPT} ${USER_INPUT_PROMPT} In JSON Format.`
+  
+      console.log("FINAL_PROMPT", FINAL_PROMPT)
+  
+  
+      const result = await GenerateCourseLayout.sendMessage(FINAL_PROMPT)
+      console.log(result.response?.text());
+  
+      console.log("result", JSON.parse(result.response?.text()))
 
-    const result = await GenerateCourseLayout.sendMessage(FINAL_PROMPT)
-    console.log(result.response?.text());
-
-    console.log("result", JSON.parse(result.response?.text()))
-
+    } catch (error) {
+      
+      toast.error("Something went wrong. Please try again", {
+        className: "border border-primary",
+      })
+      
+    } finally {
+      setLoading(false)
+    }
 
   }
 
@@ -164,6 +181,7 @@ function CreateCourse() {
       </div>
 
     </div>
+    <LoadingDialog loading={loading} />
     </div>
   )
 }
