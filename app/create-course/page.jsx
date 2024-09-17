@@ -5,6 +5,7 @@ import React, { useState, useEffect } from 'react'
 import { HiClipboardDocumentCheck, HiLightBulb, HiMiniSquares2X2 } from 'react-icons/hi2'
 import SelectCategory from './_components/SelectCategory'
 import TopicDescription from './_components/TopicDescription'
+import SelectOption from './_components/SelectOption'
 
 function CreateCourse() {
   const StepperOptions = [{
@@ -66,7 +67,7 @@ function CreateCourse() {
       {/* Component */}
 
       {
-        activeIndex == 0 ? <SelectCategory /> : activeIndex == 1 ? <TopicDescription />: <div>Options</div>
+        activeIndex == 0 ? <SelectCategory /> : activeIndex == 1 ? <TopicDescription />: <SelectOption />
       }
 
       {/* Next Prev Button */}
