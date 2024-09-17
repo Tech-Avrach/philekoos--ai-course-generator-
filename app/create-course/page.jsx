@@ -1,11 +1,13 @@
 "use client"
 
 import { Button } from '@/components/ui/button'
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import { HiClipboardDocumentCheck, HiLightBulb, HiMiniSquares2X2 } from 'react-icons/hi2'
 import SelectCategory from './_components/SelectCategory'
 import TopicDescription from './_components/TopicDescription'
 import SelectOption from './_components/SelectOption'
+import { UserInputContext } from '../_context/UserInputContext'
+import toast from 'react-hot-toast';
 
 function CreateCourse() {
   const StepperOptions = [{
@@ -27,11 +29,65 @@ function CreateCourse() {
   },
   ]
 
+  const { userCourseInput, setUserCourseInput } = useContext(UserInputContext);
+
   const [activeIndex, setActiveIndex] = useState(0)
 
   useEffect(() => {
-    console.log(activeIndex)
-  }, [activeIndex])
+    console.log(userCourseInput)
+  }, [userCourseInput])
+
+  const handleNextButton = () => {
+
+    if(activeIndex === 0 && !userCourseInput?.category) {
+      toast("Please select a category", {
+        className: "border border-primary",
+      })
+
+      return;
+    } 
+    
+    else if(activeIndex === 1 && (!userCourseInput?.topic || userCourseInput?.topic.trim() === "")) {
+      toast("Please enter a topic", {
+        className: "border border-primary",
+      })
+      return;
+    }
+    
+    else if(activeIndex === 2) {
+
+      if(!userCourseInput?.level) {
+        toast("Please select a Difficulty level", {
+          className: "border border-primary",
+        })
+        return;
+      }
+
+      if(!userCourseInput?.duration) {
+        toast("Please select a Course duration", {
+          className: "border border-primary",
+        })
+        return;
+      }
+
+      if(!userCourseInput?.displayVideo) {
+        toast("Please select a display video or not", {
+          className: "border border-primary",
+        })
+        return;
+      }
+
+      if(!userCourseInput?.noOfChapters) {
+        toast("Please enter a chapter numbers", {
+          className: "border border-primary",
+        })
+        return;
+      }
+    }
+
+
+    setActiveIndex((prevIndex) => prevIndex + 1)
+  }
 
 
   return (
@@ -82,11 +138,11 @@ function CreateCourse() {
         </Button>
 
         {
-          activeIndex !== StepperOptions.length - 1 && <Button onClick={() => setActiveIndex(activeIndex + 1)} >Next</Button>
+          activeIndex !== StepperOptions.length - 1 && <Button onClick={() => handleNextButton()} >Next</Button>
         }
 
         {
-          activeIndex == StepperOptions.length - 1 && <Button onClick={() => setActiveIndex(activeIndex + 1)} >Generate Course Layout</Button>
+          activeIndex == StepperOptions.length - 1 && <Button onClick={() =>  handleNextButton()} >Generate Course Layout</Button>
         }
       </div>
 

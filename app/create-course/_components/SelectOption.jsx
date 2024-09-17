@@ -1,4 +1,4 @@
-import React from 'react'
+import React,{ useContext } from 'react'
 
 import {
   Select,
@@ -8,14 +8,26 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { Input } from '@/components/ui/input'
+import { UserInputContext } from '@/app/_context/UserInputContext';
 
 function SelectOption() {
+
+  const { userCourseInput, setUserCourseInput } = useContext(UserInputContext);
+
+  const handleInputChange = (fieldName, value) => {
+    setUserCourseInput((prevInput) => ({
+      ...prevInput,
+      [fieldName]: value
+    }))
+  }
+
+
   return (
     <div className="px-10 md:px-20 lg:px-44">
       <div className="grid grid-cols-2 gap-10">
         <div>
           <label htmlFor="Select Difficulty" className="text-sm">Difficulty Level</label>
-          <Select>
+          <Select onValueChange={(value) => handleInputChange("level", value)} value={userCourseInput?.level}>
             <SelectTrigger className="">
               <SelectValue placeholder="Select" />
             </SelectTrigger>
@@ -29,7 +41,7 @@ function SelectOption() {
 
         <div>
           <label htmlFor="Courese Duration" className="text-sm">Course Duration</label>
-          <Select>
+          <Select onValueChange={(value) => handleInputChange("duration", value)} value={userCourseInput?.duration}>
             <SelectTrigger className="">
               <SelectValue placeholder="Select" />
             </SelectTrigger>
@@ -43,7 +55,7 @@ function SelectOption() {
 
         <div>
           <label htmlFor="Display Video" className="text-sm">Display Video</label>
-          <Select>
+          <Select onValueChange={(value) => handleInputChange("displayVideo", value)} value={userCourseInput?.displayVideo}>
             <SelectTrigger className="">
               <SelectValue placeholder="Select" />
             </SelectTrigger>
@@ -56,7 +68,10 @@ function SelectOption() {
 
         <div>
           <label htmlFor="Number of Chapters" className="text-sm">Number of Chapters</label>
-          <Input id="chapterNumber" type="number" placeholder="Chapter Number" min="1"/>
+          <Input id="chapterNumber" type="number" placeholder="Chapter Number" min="1"
+            onChange={(e) => handleInputChange("noOfChapters", e.target.value)}
+            value={userCourseInput?.noOfChapters}
+          />
         </div>
       </div>
     </div>
