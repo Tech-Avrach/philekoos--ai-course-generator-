@@ -4,6 +4,8 @@ import React from 'react'
 
 function SelectCategory() {
   return (
+    <div>
+    <h2 className=" px-10 md:px-20 my-5">Select the Course Category</h2>
     <div className="grid grid-cols-3 gap-10 px-10 md:px-20">
         {
             CaregoryList.map((category, index) => (
@@ -14,6 +16,7 @@ function SelectCategory() {
                 </div>
             )
         )}
+    </div>
     </div>
   )
 }
