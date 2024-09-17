@@ -16,6 +16,9 @@ function SelectCategory() {
     setUserCourseInput((prevInput) => ({
       category
     }));
+
+    // const audio = new Audio("/click_effect.mp3");
+    // audio.play();
   }
 
   return (
