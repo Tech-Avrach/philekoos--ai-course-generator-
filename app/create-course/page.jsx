@@ -108,7 +108,7 @@ function CreateCourse() {
 
       setLoading(true)
 
-      const BASIC_PROMPT = "Generate A Course Tutorial on Following Detail With fiels as Course Name, Description, Along With Chapter Name, about, Duration."
+      const BASIC_PROMPT = "Generate A Course Tutorial on Following Detail With fiels as Course Name, Description,NoOfChapters, Along With Chapter Name, about, Duration."
 
       const USER_INPUT_PROMPT = `Category: ${userCourseInput?.category}, Topic: ${userCourseInput?.topic}, Level: ${userCourseInput?.level}, Duration: ${userCourseInput?.duration}, NoOfChapters: ${userCourseInput?.noOfChapters}`
   

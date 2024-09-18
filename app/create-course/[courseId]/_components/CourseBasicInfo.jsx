@@ -39,7 +39,7 @@ function CourseBasicInfo({ course }) {
                     <div className="flex flex-col justify-between">
                         <div>
                         <h2 className="text-2xl font-bold">{course?.courseOutput?.course?.name}</h2>
-                        <p className="text-sm text-gray-400 mt-3">{course?.courseOutput?.course?.description}</p>
+                        <p className="text-md text-gray-500 mt-3">{course?.courseOutput?.course?.description}</p>
         
                         <div className="p-2 border border-primary mt-5 w-fit rounded-full bg-blue-50">
                             <h2 className="font-medium flex gap-2 items-center text-primary">
