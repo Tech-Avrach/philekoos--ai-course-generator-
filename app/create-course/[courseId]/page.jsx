@@ -7,6 +7,7 @@ import { and, eq } from 'drizzle-orm'
 import React, { useEffect, useState } from 'react'
 import CourseBasicInfo from './_components/CourseBasicInfo'
 import CourseDetail from './_components/CourseDetail'
+import ChapterList from './_components/ChapterList'
 
 function CourseLayout({params}) {
 
@@ -43,6 +44,8 @@ function CourseLayout({params}) {
         {course && <CourseDetail course={course} />}
 
         {/* List Of Lessons */}
+
+        {course && <ChapterList course={course} />}
     </div>
   )
 }
