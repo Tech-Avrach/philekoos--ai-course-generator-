@@ -15,6 +15,7 @@ import { db } from '@/configs/db'
 import { v4 as uuidv4 } from 'uuid';
 import { useUser } from '@clerk/nextjs'
 import { CourseList } from '@/configs/schema'
+import { useRouter } from 'next/navigation'
 
 function CreateCourse() {
   const StepperOptions = [{
@@ -44,7 +45,7 @@ function CreateCourse() {
 
   const { user } = useUser();
 
-  console.log(uuidv4());
+  const router = useRouter();
 
 
   useEffect(() => {
@@ -151,6 +152,8 @@ function CreateCourse() {
         userProfileImage: user?.imageUrl
       })
       
+      router.replace(`/create-course/${id}`)
+
     } catch (error) {
       console.log("Storing Layout to database : ", error)
 
