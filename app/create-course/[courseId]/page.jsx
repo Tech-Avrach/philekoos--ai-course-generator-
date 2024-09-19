@@ -9,14 +9,20 @@ import CourseBasicInfo from './_components/CourseBasicInfo'
 import CourseDetail from './_components/CourseDetail'
 import ChapterList from './_components/ChapterList'
 
+// import { useRouter } from 'next/navigation'
+
 function CourseLayout({params}) {
 
     const { user } = useUser();
+
+    // const router = useRouter();
 
     const [course, setCourse] = useState("loading")
 
     useEffect(()=>{
         console.log("params", params)
+
+        console.log("user", user)
 
         params && GetCourse();
     },[params, user])
@@ -28,7 +34,7 @@ function CourseLayout({params}) {
         ))
 
         if(result[0] && result[0] !== undefined) setCourse(result[0])
-        // console.log("course", result[0])
+        console.log("course", result[0])
     }
 
   return (
@@ -37,7 +43,7 @@ function CourseLayout({params}) {
 
         {/* Basic Info */}
         
-        {course && <CourseBasicInfo course={course} />}
+        {course && <CourseBasicInfo course={course} GetCourse={GetCourse}/>}
 
         {/* Course Detail */}
 

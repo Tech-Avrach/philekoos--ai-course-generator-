@@ -1,5 +1,6 @@
 import React from 'react'
 import { HiOutlineCheckCircle, HiOutlineClock } from 'react-icons/hi2'
+import EditChaptes from './EditChaptes'
 
 function ChapterList({ course }) {
     // return (
@@ -76,7 +77,12 @@ function ChapterList({ course }) {
                                 </div>
 
                                 <div>
+                                    <div className="flex items-center gap-3">
                                     <h2 className="font-medium text-lg">{chapter?.name}</h2>
+                                    <h2 className="font-medium text-lg text-gray-500">
+                                        <EditChaptes />
+                                    </h2>
+                                    </div>
                                     <p className="text-sm text-gray-500">{chapter?.about}</p>
                                     <p className="flex gap-2 text-primary items-center mt-2 "><HiOutlineClock />{chapter?.duration}</p>
                                 </div>

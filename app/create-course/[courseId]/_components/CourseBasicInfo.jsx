@@ -5,7 +5,7 @@ import React from 'react'
 import { HiOutlinePuzzlePiece } from 'react-icons/hi2'
 import EditCoursebasicInfo from './EditCoursebasicInfo'
 
-function CourseBasicInfo({ course }) {
+function CourseBasicInfo({ course, GetCourse }) {
 
     console.log("course in basic info", course)
 
@@ -39,10 +39,10 @@ function CourseBasicInfo({ course }) {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
                     <div className="flex flex-col justify-between">
                         <div>
-                        <div className="flex items-center gap-3">
+                        <div className="flex gap-3">
                         <h2 className="text-2xl font-bold">{course?.courseOutput?.course?.name}</h2>
-                        <h2 className="text-2xl font-bold">
-                            <EditCoursebasicInfo course={course}/>
+                        <h2 className="text-2xl font-bold text-gray-500">
+                            <EditCoursebasicInfo course={course} GetCourse={GetCourse}/>
                         </h2>
                         </div>
                         <p className="text-md text-gray-500 mt-3">{course?.courseOutput?.course?.description}</p>

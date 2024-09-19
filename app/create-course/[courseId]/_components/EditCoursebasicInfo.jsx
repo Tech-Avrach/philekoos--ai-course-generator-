@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 
 import {
     Dialog,
@@ -14,8 +14,55 @@ import { HiPencilSquare } from 'react-icons/hi2'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
+import { db } from '@/configs/db'
+import { eq } from 'drizzle-orm'
+import { CourseList } from '@/configs/schema'
+import toast from 'react-hot-toast';
 
-function EditCoursebasicInfo({ course }) {
+function EditCoursebasicInfo({ course, GetCourse }) {
+
+  const [name, setName] = useState(course?.courseOutput?.course?.name)
+  const [description, setDescription] = useState(course?.courseOutput?.course?.description)
+
+  const onUpdateHandler = async () => {
+    course.courseOutput.course.name = name;
+    course.courseOutput.course.description = description;
+
+    console.log("course", course) 
+
+    try {
+
+      const result = await db.update(CourseList).set({
+        courseOutput: course?.courseOutput
+      })
+      .where(eq(CourseList.courseId, course?.courseId))
+      .returning({id: CourseList.id})
+
+      if(result[0] && result[0] !== undefined) {
+
+        GetCourse();
+
+        toast.success("Course updated successfully", {
+          className: "border border-primary",
+        })
+
+      } else {
+
+        toast.error("Something went wrong. Please try again", {
+          className: "border border-primary",
+        })
+      }
+
+      console.log("result", result)
+      
+    } catch (error) {
+      toast.error("Something went wrong. Please try again", {
+        className: "border border-primary",
+      })
+    }
+
+  }
+
   return (
     <div>
         <Dialog>
@@ -26,18 +73,18 @@ function EditCoursebasicInfo({ course }) {
       <DialogDescription>
         <div className="mt-3">
           <label htmlFor="Course Title">Course Title</label>
-          <Input id="Course Title" defaultValue={course?.courseOutput?.course?.name}/>
+          <Input id="Course Title" className="font-medium text-black" defaultValue={course?.courseOutput?.course?.name} onChange={(e) => setName(e.target.value)}/>
         </div>
 
         <div>
           <label htmlFor="Description">Description</label>
-          <Textarea id="Description" />
+          <Textarea id="Description" className=" max-h-52 h-40" defaultValue={course?.courseOutput?.course?.description} onChange={(e) => setDescription(e.target.value)}/>
         </div>
       </DialogDescription>
     </DialogHeader>
     <DialogFooter>
       <DialogClose>
-        <Button>Update</Button>
+        <Button onClick={onUpdateHandler}>Update</Button>
       </DialogClose>
     </DialogFooter>
   </DialogContent>
