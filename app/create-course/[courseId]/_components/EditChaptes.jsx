@@ -10,17 +10,16 @@ import {
 import { HiPencilSquare } from 'react-icons/hi2'
   
 
-function EditChaptes() {
+function EditChaptes({ course, chapter, index, GetCourse }) {
   return (
     <div>
         <Dialog>
   <DialogTrigger><HiPencilSquare /></DialogTrigger>
   <DialogContent>
     <DialogHeader>
-      <DialogTitle>Are you absolutely sure?</DialogTitle>
+      <DialogTitle>Edit Chapter {index + 1}</DialogTitle>
       <DialogDescription>
-        This action cannot be undone. This will permanently delete your account
-        and remove your data from our servers.
+        
       </DialogDescription>
     </DialogHeader>
   </DialogContent>

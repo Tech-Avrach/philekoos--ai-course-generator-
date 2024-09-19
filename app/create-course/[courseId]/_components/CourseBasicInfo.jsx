@@ -7,7 +7,7 @@ import EditCoursebasicInfo from './EditCoursebasicInfo'
 
 function CourseBasicInfo({ course, GetCourse }) {
 
-    console.log("course in basic info", course)
+    // console.log("course in basic info", course)
 
     // console.log("course in basic info", course)
 

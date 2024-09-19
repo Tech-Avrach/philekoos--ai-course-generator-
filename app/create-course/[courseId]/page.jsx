@@ -51,7 +51,7 @@ function CourseLayout({params}) {
 
         {/* List Of Lessons */}
 
-        {course && <ChapterList course={course} />}
+        {course && <ChapterList course={course} GetCourse={GetCourse}/>}
     </div>
   )
 }
