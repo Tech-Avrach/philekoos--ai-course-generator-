@@ -73,7 +73,7 @@ function EditCoursebasicInfo({ course, GetCourse }) {
       <DialogDescription>
         <div className="mt-3">
           <label htmlFor="Course Title">Course Title</label>
-          <Input id="Course Title" className="font-medium text-black" defaultValue={course?.courseOutput?.course?.name} onChange={(e) => setName(e.target.value)}/>
+          <Input id="Course Title" className="font-medium text-black mb-3 " defaultValue={course?.courseOutput?.course?.name} onChange={(e) => setName(e.target.value)}/>
         </div>
 
         <div>
