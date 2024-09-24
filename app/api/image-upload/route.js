@@ -12,8 +12,11 @@ import { v2 as cloudinary } from 'cloudinary';
     export const POST = async (req) => {
         const formData = await req.formData();
         const image = formData.get("image");
+        const folderName = formData.get("folderName");
 
         console.log("image", image)
+
+        console.log("folderName", folderName)
 
         // return new Response(
         //     JSON.stringify({ msg: "Image uploaded successfully", url: image }),
@@ -33,7 +36,7 @@ import { v2 as cloudinary } from 'cloudinary';
                 const uploadStream = cloudinary.uploader.upload_stream(
                     {
                         resource_type: "auto", // Automatically detect the file type (image/video/etc.)
-                        folder: "philekoos/images", // Folder where the image will be stored
+                        folder: `philekoos/${folderName}`, // Folder where the image will be stored
                     },
                     (error, result) => {
                         if (error) {

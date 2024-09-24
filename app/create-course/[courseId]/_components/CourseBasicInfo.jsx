@@ -33,10 +33,11 @@ function CourseBasicInfo({ course, GetCourse }) {
 
         try {
 
-            const formDate = new FormData();
-            formDate.append("image", courseImageFile);
+            const formData = new FormData();
+            formData.append("image", courseImageFile);
+            formData.append("folderName", course.courseId);
 
-            const response = await axios.post("/api/image-upload", formDate);
+            const response = await axios.post("/api/image-upload", formData);
 
             const data = await response.data;
 
