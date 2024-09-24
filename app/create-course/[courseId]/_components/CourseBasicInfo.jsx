@@ -10,6 +10,10 @@ import toast from 'react-hot-toast';
 import axios from 'axios'
 import GenerateImage from './GenerateImage'
 
+import { db } from '@/configs/db'
+import { eq } from 'drizzle-orm'
+import { CourseList } from '@/configs/schema'
+
 
 function CourseBasicInfo({ course, GetCourse }) {
 
@@ -22,9 +26,9 @@ function CourseBasicInfo({ course, GetCourse }) {
     // console.log("course in basic info", course)
 
 
-    const handleStartCourse = async() => {
+    const handleStartCourse = async () => {
 
-        if(courseImageFile === null) {
+        if (courseImageFile === null) {
             toast.error("Please select an image", {
                 className: "border border-primary",
             })
@@ -41,12 +45,51 @@ function CourseBasicInfo({ course, GetCourse }) {
 
             const data = await response.data;
 
+            const imageUrl = await response.data.url;
+
             console.log("data", JSON.stringify(data));
-                
+
+
+            try {
+
+                const result = await db.update(CourseList).set({
+                    courseBanner: imageUrl
+                })
+                    .where(eq(CourseList.courseId, course?.courseId))
+                    .returning({ id: CourseList.id })
+
+                console.log("result", result)
+
+                if (result[0] && result[0] !== undefined) {
+
+                    GetCourse();
+
+                    toast.success("Course updated successfully", {
+                        className: "border border-primary",
+                    })
+
+                } else {
+
+                    toast.error("Something went wrong. Please try again", {
+                        className: "border border-primary",
+                    })
+                }
+
+                console.log("result", result)
+
             } catch (error) {
-                
-                console.error("Error uploading image:", error);
+
+                console.log("error", error)
+
+                toast.error("Something went wrong. Please try again", {
+                    className: "border border-primary",
+                })
             }
+
+        } catch (error) {
+
+            console.error("Error uploading image:", error);
+        }
     }
 
     const onFileChange = async (event) => {
@@ -69,9 +112,9 @@ function CourseBasicInfo({ course, GetCourse }) {
             // const data = await response.data;
 
             // console.log("data", JSON.stringify(data));
-                
+
             // } catch (error) {
-                
+
             //     console.error("Error uploading image:", error);
             // }
 
@@ -149,10 +192,10 @@ function CourseBasicInfo({ course, GetCourse }) {
                                 <div className="absolute bottom-10 left-3 cursor-pointer flex">
                                     {/* LuBrain Icon Div - Hover to Show the Button */}
                                     <div className="peer">
-                                        <GenerateImage 
-                                            imagePrompt={course?.courseOutput?.imagePrompt} 
-                                            name={course?.name} 
-                                            setCourseImage={setCourseImage} 
+                                        <GenerateImage
+                                            imagePrompt={course?.courseOutput?.imagePrompt}
+                                            name={course?.name}
+                                            setCourseImage={setCourseImage}
                                             setCourseImageFile={setCourseImageFile}
                                         />
                                     </div>
@@ -184,10 +227,10 @@ function CourseBasicInfo({ course, GetCourse }) {
                                 <div className="absolute bottom-10 left-3 cursor-pointer flex">
                                     {/* LuBrain Icon Div - Hover to Show the Button */}
                                     <div className="peer">
-                                        <GenerateImage 
-                                            imagePrompt={course?.courseOutput?.imagePrompt} 
-                                            name={course?.name} 
-                                            setCourseImage={setCourseImage} 
+                                        <GenerateImage
+                                            imagePrompt={course?.courseOutput?.imagePrompt}
+                                            name={course?.name}
+                                            setCourseImage={setCourseImage}
                                             setCourseImageFile={setCourseImageFile}
                                         />
                                     </div>
