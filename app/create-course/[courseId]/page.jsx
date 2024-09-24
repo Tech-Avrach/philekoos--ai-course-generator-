@@ -1,7 +1,7 @@
 "use client"
 
 import { db } from '@/configs/db'
-import { CourseList } from '@/configs/schema'
+import { Chapters, CourseList } from '@/configs/schema'
 import { useUser } from '@clerk/nextjs'
 import { and, eq } from 'drizzle-orm'
 import React, { useEffect, useState } from 'react'
@@ -61,8 +61,10 @@ function CourseLayout({params}) {
 
                     let videoId = "";
 
-                    // const result = await GenerateChapterContent_AI.sendMessage(PROMPT);
-                    // console.log("Course detail : ", result.response?.text());
+                    const result = await GenerateChapterContent_AI.sendMessage(PROMPT);
+                    console.log("Course detail : ", result.response?.text());
+
+                    const content = JSON.parse(result.response?.text());
 
                     //Generate Video Url
                     service.getVideos(course?.courseOutput?.name + ":" + chapter?.name).then((response) => {
@@ -71,7 +73,17 @@ function CourseLayout({params}) {
                         videoId = response[0]?.id?.videoId;
                     })
 
-                    //Save Chap[ter Content + Video Url
+                    //Save Chapter Content + Video Url
+
+                    await db.insert(Chapters).values({
+                        chapterId: index,
+                        courseId: course?.courseId,
+                        content: content,
+                        videoId: videoId
+                    })
+
+
+
                     setLoading(false)
 
                 } catch (error) {
