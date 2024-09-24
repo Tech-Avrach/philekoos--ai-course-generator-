@@ -15,23 +15,26 @@ function CourseBasicInfo({ course, GetCourse }) {
 
     const [courseImage, setCourseImage] = useState(null);
 
-    // console.log("course in basic info", course)
+    const [courseImageFile, setCourseImageFile] = useState(null);
 
     // console.log("course in basic info", course)
 
+    // console.log("course in basic info", course)
 
-    const onFileChange = async (event) => {
-        const file = event.target.files[0];
 
-        // Check if the selected file is an image
-        if (file && file.type.startsWith("image/")) {
-            console.log("Valid image file", file);
-            setCourseImage(URL.createObjectURL(file));
+    const handleStartCourse = async() => {
 
-            try {
+        if(courseImageFile === null) {
+            toast.error("Please select an image", {
+                className: "border border-primary",
+            })
+            return
+        }
+
+        try {
 
             const formDate = new FormData();
-            formDate.append("image", file);
+            formDate.append("image", courseImageFile);
 
             const response = await axios.post("/api/image-upload", formDate);
 
@@ -43,6 +46,33 @@ function CourseBasicInfo({ course, GetCourse }) {
                 
                 console.error("Error uploading image:", error);
             }
+    }
+
+    const onFileChange = async (event) => {
+        const file = event.target.files[0];
+
+        // Check if the selected file is an image
+        if (file && file.type.startsWith("image/")) {
+            console.log("Valid image file", file);
+            setCourseImage(URL.createObjectURL(file));
+
+            setCourseImageFile(file);
+
+            // try {
+
+            // const formDate = new FormData();
+            // formDate.append("image", file);
+
+            // const response = await axios.post("/api/image-upload", formDate);
+
+            // const data = await response.data;
+
+            // console.log("data", JSON.stringify(data));
+                
+            // } catch (error) {
+                
+            //     console.error("Error uploading image:", error);
+            // }
 
         } else {
             console.log("Invalid file type. Please select an image.");
@@ -97,7 +127,7 @@ function CourseBasicInfo({ course, GetCourse }) {
                             </div>
                         </div>
 
-                        <Button className="w-full mt-5">Start Course</Button>
+                        <Button className="w-full mt-5" onClick={handleStartCourse}>Start Course</Button>
                     </div>
                     {
                         courseImage ? (
@@ -118,7 +148,12 @@ function CourseBasicInfo({ course, GetCourse }) {
                                 <div className="absolute bottom-10 left-3 cursor-pointer flex">
                                     {/* LuBrain Icon Div - Hover to Show the Button */}
                                     <div className="peer">
-                                        <GenerateImage imagePrompt={course?.courseOutput?.imagePrompt} name={course?.name}/>
+                                        <GenerateImage 
+                                            imagePrompt={course?.courseOutput?.imagePrompt} 
+                                            name={course?.name} 
+                                            setCourseImage={setCourseImage} 
+                                            setCourseImageFile={setCourseImageFile}
+                                        />
                                     </div>
 
                                     {/* AI Image Generation Button - Initially Hidden, Shown on Hover of LuBrain Div */}
@@ -148,7 +183,12 @@ function CourseBasicInfo({ course, GetCourse }) {
                                 <div className="absolute bottom-10 left-3 cursor-pointer flex">
                                     {/* LuBrain Icon Div - Hover to Show the Button */}
                                     <div className="peer">
-                                        <GenerateImage imagePrompt={course?.courseOutput?.imagePrompt} name={course?.name}/>
+                                        <GenerateImage 
+                                            imagePrompt={course?.courseOutput?.imagePrompt} 
+                                            name={course?.name} 
+                                            setCourseImage={setCourseImage} 
+                                            setCourseImageFile={setCourseImageFile}
+                                        />
                                     </div>
 
                                     {/* AI Image Generation Button - Initially Hidden, Shown on Hover of LuBrain Div */}

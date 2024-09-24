@@ -16,10 +16,11 @@ import { Button } from '@/components/ui/button';
 import { DialogClose } from '@radix-ui/react-dialog';
 import { v4 as uuidv4 } from 'uuid';
 
-function GenerateImage({ imagePrompt, name }) {
+function GenerateImage({ imagePrompt, name, setCourseImage, setCourseImageFile }) {
 
     const [loading, setLoading] = useState(true);
     const [imageUrl, setImageUrl] = useState('');
+    const [imageFile, setImageFile] = useState(null);
 
     // useEffect(() => {
     //     HandleGenerateImage()
@@ -67,18 +68,22 @@ function GenerateImage({ imagePrompt, name }) {
 
             console.log("file", file)
 
-            const formDate = new FormData();
-            formDate.append("image", file);
+            setImageFile(file);
 
-            const uploadResponse = await axios.post("/api/image-upload", formDate);
+            const url = URL.createObjectURL(blob);
+            setImageUrl(url); 
 
-            const data = await uploadResponse.data;
+            // const formDate = new FormData();
 
-            console.log("data", JSON.stringify(data))
+            // formDate.append("image", file);
+
+            // const uploadResponse = await axios.post("/api/image-upload", formDate);
+
+            // const data = await uploadResponse.data;
+
+            // console.log("data", JSON.stringify(data))
 
             
-            const url = URL.createObjectURL(blob);
-            setImageUrl(url); // Store the URL in state
 
         } catch (error) {
             console.log(error);
@@ -86,6 +91,18 @@ function GenerateImage({ imagePrompt, name }) {
             setLoading(false);
         }
     };
+
+    const handleCancel = () => {
+        setImageUrl(null);
+        setImageFile(null);
+        setLoading(true);
+    }
+
+    const handleUpdate = () => {
+        setCourseImage(imageUrl);
+        setCourseImageFile(imageFile);
+        setLoading(true);
+    }
 
     return (
         <div>
@@ -135,9 +152,9 @@ function GenerateImage({ imagePrompt, name }) {
                     </DialogHeader>
                     <DialogFooter>
                         <DialogClose>
-                            <Button variant="outline"  className="mr-3" onClick={() => setLoading(true)}>Cancel</Button>
+                            <Button variant="outline"  className="mr-3" onClick={handleCancel}>Cancel</Button>
 
-                            <Button onClick={() => setLoading(true)}>Update</Button>
+                            <Button onClick={handleUpdate}>Update</Button>
                         </DialogClose>
                     </DialogFooter>
                 </DialogContent>
