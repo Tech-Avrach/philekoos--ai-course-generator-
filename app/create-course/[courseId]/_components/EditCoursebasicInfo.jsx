@@ -25,8 +25,8 @@ function EditCoursebasicInfo({ course, GetCourse }) {
   const [description, setDescription] = useState(course?.courseOutput?.description)
 
   const onUpdateHandler = async () => {
-    course.courseOutput.course.name = name;
-    course.courseOutput.course.description = description;
+    course.courseOutput.name = name;
+    course.courseOutput.description = description;
 
     console.log("course", course) 
 

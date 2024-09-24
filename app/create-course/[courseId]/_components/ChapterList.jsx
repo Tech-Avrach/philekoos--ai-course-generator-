@@ -25,7 +25,7 @@ function ChapterList({ course, GetCourse }) {
 
     const handleChapterOrder = async (newChaptersOrder) => {
 
-        course.courseOutput.course.chapters = newChaptersOrder;
+        course.courseOutput.chapters = newChaptersOrder;
 
         try {
             const result = await db.update(CourseList).set({

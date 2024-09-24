@@ -27,14 +27,14 @@ function EditChaptes({ course, chapter, index, GetCourse }) {
     const [description, setDescription] = useState(chapter?.about)
 
     const onUpdateHandler = async () => {
-        course.courseOutput.course.chapters[index].name = name;
-        course.courseOutput.course.chapters[index].about = description;
+        course.courseOutput.chapters[index].name = name;
+        course.courseOutput.chapters[index].about = description;
     
         console.log("course", course) 
 
-        console.log("name", course.courseOutput.course.chapters[index].name)
+        console.log("name", course.courseOutput.chapters[index].name)
 
-        console.log("description", course.courseOutput.course.chapters[index].about)
+        console.log("description", course.courseOutput.chapters[index].about)
     
         try {
     
