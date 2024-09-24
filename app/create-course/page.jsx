@@ -108,7 +108,7 @@ function CreateCourse() {
 
       setLoading(true)
 
-      const BASIC_PROMPT = "Generate A Course Tutorial on Following Detail With fiels as Course Name, Description,NoOfChapters, Along With Chapter Name, about, Duration."
+      const BASIC_PROMPT = "Generate A Course Tutorial on Following Detail With fiels as Name, Description, a detailed prompt to generate a banner image of that course as imagePrompt, NoOfChapters, Along With Chapter Name, about, Duration."
 
       const USER_INPUT_PROMPT = `Category: ${userCourseInput?.category}, Topic: ${userCourseInput?.topic}, Level: ${userCourseInput?.level}, Duration: ${userCourseInput?.duration}, NoOfChapters: ${userCourseInput?.noOfChapters}`
   
@@ -146,6 +146,7 @@ function CreateCourse() {
         name: userCourseInput?.topic,
         category: userCourseInput?.category,
         level: userCourseInput?.level,
+        imagePrompt: userCourseInput?.imagePrompt,
         courseOutput: courseLayout,
         createdBy: user?.primaryEmailAddress?.emailAddress,
         userName: user?.fullName,

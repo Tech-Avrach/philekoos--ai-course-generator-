@@ -70,7 +70,7 @@ function CourseDetail({ course }) {
                             Duration
                         </h2>
                         <h2 className="font-medium text-lg">
-                            {course?.courseOutput?.course?.duration}
+                            {course?.courseOutput?.duration}
                         </h2>
                     </div>
                 </div>
@@ -82,7 +82,7 @@ function CourseDetail({ course }) {
                             No of Chapters
                         </h2>
                         <h2 className="font-medium text-lg">
-                            {course?.courseOutput?.course?.chapters.length}
+                            {course?.courseOutput?.chapters.length}
                         </h2>
                     </div>
                 </div>

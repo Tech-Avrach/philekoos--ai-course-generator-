@@ -21,8 +21,8 @@ import toast from 'react-hot-toast';
 
 function EditCoursebasicInfo({ course, GetCourse }) {
 
-  const [name, setName] = useState(course?.courseOutput?.course?.name)
-  const [description, setDescription] = useState(course?.courseOutput?.course?.description)
+  const [name, setName] = useState(course?.courseOutput?.name)
+  const [description, setDescription] = useState(course?.courseOutput?.description)
 
   const onUpdateHandler = async () => {
     course.courseOutput.course.name = name;
@@ -73,12 +73,12 @@ function EditCoursebasicInfo({ course, GetCourse }) {
       <DialogDescription>
         <div className="mt-3">
           <label htmlFor="Course Title">Course Title</label>
-          <Input id="Course Title" className="font-medium text-black mb-3 " defaultValue={course?.courseOutput?.course?.name} onChange={(e) => setName(e.target.value)}/>
+          <Input id="Course Title" className="font-medium text-black mb-3 " defaultValue={course?.courseOutput?.name} onChange={(e) => setName(e.target.value)}/>
         </div>
 
         <div>
           <label htmlFor="Description">Description</label>
-          <Textarea id="Description" className=" max-h-52 h-40" defaultValue={course?.courseOutput?.course?.description} onChange={(e) => setDescription(e.target.value)}/>
+          <Textarea id="Description" className=" max-h-52 h-40" defaultValue={course?.courseOutput?.description} onChange={(e) => setDescription(e.target.value)}/>
         </div>
       </DialogDescription>
     </DialogHeader>

@@ -17,7 +17,7 @@ function ChapterList({ course, GetCourse }) {
 
     useEffect(() => {
         if (course && course !== 'loading') {
-            setChapters(course?.courseOutput?.course?.chapters || []);
+            setChapters(course?.courseOutput?.chapters || []);
         }
 
         console.log("course in chapter list", course);
