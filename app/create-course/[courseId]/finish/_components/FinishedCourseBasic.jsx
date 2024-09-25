@@ -3,20 +3,18 @@ import Image from 'next/image'
 import React, { useState, useEffect } from 'react'
 
 import { HiOutlinePuzzlePiece } from 'react-icons/hi2'
-import EditCoursebasicInfo from './EditCoursebasicInfo'
+// import EditCoursebasicInfo from './EditCoursebasicInfo'
 import { LuBrain } from "react-icons/lu";
 
 import toast from 'react-hot-toast';
 import axios from 'axios'
-import GenerateImage from './GenerateImage'
+// import GenerateImage from './GenerateImage'
 
 import { db } from '@/configs/db'
 import { eq } from 'drizzle-orm'
 import { CourseList } from '@/configs/schema'
 
-
-function CourseBasicInfo({ course, GetCourse }) {
-
+function FinishedCourseBasic({ course }) {
     const [courseImage, setCourseImage] = useState(null);
 
     const [courseImageFile, setCourseImageFile] = useState(null);
@@ -57,41 +55,41 @@ function CourseBasicInfo({ course, GetCourse }) {
             console.log("data", JSON.stringify(data));
 
 
-            try {
+            // try {
 
-                const result = await db.update(CourseList).set({
-                    courseBanner: imageUrl
-                })
-                    .where(eq(CourseList.courseId, course?.courseId))
-                    .returning({ id: CourseList.id })
+            //     const result = await db.update(CourseList).set({
+            //         courseBanner: imageUrl
+            //     })
+            //         .where(eq(CourseList.courseId, course?.courseId))
+            //         .returning({ id: CourseList.id })
 
-                console.log("result", result)
+            //     console.log("result", result)
 
-                if (result[0] && result[0] !== undefined) {
+            //     if (result[0] && result[0] !== undefined) {
 
-                    GetCourse();
+            //         GetCourse();
 
-                    toast.success("Course updated successfully", {
-                        className: "border border-primary",
-                    })
+            //         toast.success("Course updated successfully", {
+            //             className: "border border-primary",
+            //         })
 
-                } else {
+            //     } else {
 
-                    toast.error("Something went wrong. Please try again", {
-                        className: "border border-primary",
-                    })
-                }
+            //         toast.error("Something went wrong. Please try again", {
+            //             className: "border border-primary",
+            //         })
+            //     }
 
-                console.log("result", result)
+            //     console.log("result", result)
 
-            } catch (error) {
+            // } catch (error) {
 
-                console.log("error", error)
+            //     console.log("error", error)
 
-                toast.error("Something went wrong. Please try again", {
-                    className: "border border-primary",
-                })
-            }
+            //     toast.error("Something went wrong. Please try again", {
+            //         className: "border border-primary",
+            //     })
+            // }
 
         } catch (error) {
 
@@ -99,40 +97,40 @@ function CourseBasicInfo({ course, GetCourse }) {
         }
     }
 
-    const onFileChange = async (event) => {
-        const file = event.target.files[0];
+    // const onFileChange = async (event) => {
+    //     const file = event.target.files[0];
 
-        // Check if the selected file is an image
-        if (file && file.type.startsWith("image/")) {
-            console.log("Valid image file", file);
-            setCourseImage(URL.createObjectURL(file));
+    //     // Check if the selected file is an image
+    //     if (file && file.type.startsWith("image/")) {
+    //         console.log("Valid image file", file);
+    //         setCourseImage(URL.createObjectURL(file));
 
-            setCourseImageFile(file);
+    //         setCourseImageFile(file);
 
-            // try {
+    //         // try {
 
-            // const formDate = new FormData();
-            // formDate.append("image", file);
+    //         // const formDate = new FormData();
+    //         // formDate.append("image", file);
 
-            // const response = await axios.post("/api/image-upload", formDate);
+    //         // const response = await axios.post("/api/image-upload", formDate);
 
-            // const data = await response.data;
+    //         // const data = await response.data;
 
-            // console.log("data", JSON.stringify(data));
+    //         // console.log("data", JSON.stringify(data));
 
-            // } catch (error) {
+    //         // } catch (error) {
 
-            //     console.error("Error uploading image:", error);
-            // }
+    //         //     console.error("Error uploading image:", error);
+    //         // }
 
-        } else {
-            console.log("Invalid file type. Please select an image.");
-            toast.error("Please select an image", {
-                className: "border border-primary",
-            })
-            event.target.value = '';
-        }
-    };
+    //     } else {
+    //         console.log("Invalid file type. Please select an image.");
+    //         toast.error("Please select an image", {
+    //             className: "border border-primary",
+    //         })
+    //         event.target.value = '';
+    //     }
+    // };
 
     if (course === "loading") {
         return (
@@ -165,7 +163,7 @@ function CourseBasicInfo({ course, GetCourse }) {
                             <div className="flex gap-3">
                                 <h2 className="text-2xl font-bold">{course?.courseOutput?.name}</h2>
                                 <h2 className="text-2xl font-bold text-gray-500">
-                                    <EditCoursebasicInfo course={course} GetCourse={GetCourse} />
+                                    {/* <EditCoursebasicInfo course={course} GetCourse={GetCourse} /> */}
                                 </h2>
                             </div>
                             <p className="text-md text-gray-500 mt-3">{course?.courseOutput?.description}</p>
@@ -198,22 +196,22 @@ function CourseBasicInfo({ course, GetCourse }) {
 
                                 <div className="absolute bottom-10 left-3 cursor-pointer flex">
                                     {/* LuBrain Icon Div - Hover to Show the Button */}
-                                    <div className="peer">
+                                    {/* <div className="peer">
                                         <GenerateImage
                                             imagePrompt={course?.courseOutput?.imagePrompt}
                                             name={course?.name}
                                             setCourseImage={setCourseImage}
                                             setCourseImageFile={setCourseImageFile}
                                         />
-                                    </div>
+                                    </div> */}
 
                                     {/* AI Image Generation Button - Initially Hidden, Shown on Hover of LuBrain Div */}
-                                    <div className="hidden peer-hover:flex justify-center items-center bg-primary text-white rounded-full px-4 border-white border-2 ml-2 transition-all duration-300 ease-in-out opacity-0 peer-hover:opacity-100">
+                                    {/* <div className="hidden peer-hover:flex justify-center items-center bg-primary text-white rounded-full px-4 border-white border-2 ml-2 transition-all duration-300 ease-in-out opacity-0 peer-hover:opacity-100">
                                         <p className="text-white text-center">Generate Image with AI</p>
-                                    </div>
+                                    </div> */}
                                 </div>
 
-                                <input type="file" id="upload-image" className="opacity-0" onChange={onFileChange} />
+                                {/* <input type="file" id="upload-image" className="opacity-0" onChange={onFileChange} /> */}
                             </div>
                         ) : (
 
@@ -233,22 +231,22 @@ function CourseBasicInfo({ course, GetCourse }) {
 
                                 <div className="absolute bottom-10 left-3 cursor-pointer flex">
                                     {/* LuBrain Icon Div - Hover to Show the Button */}
-                                    <div className="peer">
+                                    {/* <div className="peer">
                                         <GenerateImage
                                             imagePrompt={course?.courseOutput?.imagePrompt}
                                             name={course?.name}
                                             setCourseImage={setCourseImage}
                                             setCourseImageFile={setCourseImageFile}
                                         />
-                                    </div>
+                                    </div> */}
 
                                     {/* AI Image Generation Button - Initially Hidden, Shown on Hover of LuBrain Div */}
-                                    <div className="hidden peer-hover:flex justify-center items-center bg-primary text-white rounded-full px-4 border-white border-2 ml-2 transition-all duration-300 ease-in-out opacity-0 peer-hover:opacity-100">
+                                    {/* <div className="hidden peer-hover:flex justify-center items-center bg-primary text-white rounded-full px-4 border-white border-2 ml-2 transition-all duration-300 ease-in-out opacity-0 peer-hover:opacity-100">
                                         <p className="text-white text-center">Generate Image with AI</p>
-                                    </div>
+                                    </div> */}
                                 </div>
 
-                                <input type="file" id="upload-image" className="opacity-0" onChange={onFileChange} />
+                                {/* <input type="file" id="upload-image" className="opacity-0" onChange={onFileChange} /> */}
                             </div>
 
 
@@ -261,4 +259,4 @@ function CourseBasicInfo({ course, GetCourse }) {
     }
 }
 
-export default CourseBasicInfo
+export default FinishedCourseBasic

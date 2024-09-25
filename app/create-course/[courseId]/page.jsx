@@ -52,67 +52,67 @@ function CourseLayout({ params }) {
 
         let error = false;
 
-        chapters.forEach(async (chapter, index) => {
+        // chapters.forEach(async (chapter, index) => {
 
-            const PROMPT = `Explain the concept in Detail on Topic: ${course?.courseOutput?.name}, Chapter: ${chapter?.name}, in JSON Format with a list of array with fields as title, explaination on a given chapter in detail, Code Example(Code field in <precode> format) if applicable`
+        //     const PROMPT = `Explain the concept in Detail on Topic: ${course?.courseOutput?.name}, Chapter: ${chapter?.name}, in JSON Format with a list of array with fields as title, explaination on a given chapter in detail, Code Example(Code field in <precode> format) if applicable`
 
-            console.log("prompt", PROMPT)
+        //     console.log("prompt", PROMPT)
 
-            // if(index === 0) {
-            setLoading(true)
+        //     // if(index === 0) {
+        //     setLoading(true)
 
-            try {
+        //     try {
 
-                let videoId = "";
+        //         let videoId = "";
 
-                //Generate Video Url
-                service.getVideos(course?.courseOutput?.name + ":" + chapter?.name).then((response) => {
-                    console.log("youtube response", response)
+        //         //Generate Video Url
+        //         service.getVideos(course?.courseOutput?.name + ":" + chapter?.name).then((response) => {
+        //             console.log("youtube response", response)
 
-                    videoId = response[0]?.id?.videoId;
-                })
+        //             videoId = response[0]?.id?.videoId;
+        //         })
 
-                //Generate Chapter Content
-                const result = await GenerateChapterContent_AI.sendMessage(PROMPT);
-                console.log("Course detail : ", result.response?.text());
+        //         //Generate Chapter Content
+        //         const result = await GenerateChapterContent_AI.sendMessage(PROMPT);
+        //         console.log("Course detail : ", result.response?.text());
 
-                const content = JSON.parse(result.response?.text());
+        //         const content = JSON.parse(result.response?.text());
 
 
-                //Save Chapter Content + Video Url
+        //         //Save Chapter Content + Video Url
 
-                await db.insert(Chapters).values({
-                    chapterId: index,
-                    courseId: course?.courseId,
-                    content: content,
-                    videoId: videoId
-                })
+        //         await db.insert(Chapters).values({
+        //             chapterId: index,
+        //             courseId: course?.courseId,
+        //             content: content,
+        //             videoId: videoId
+        //         })
 
-                setLoading(false)
+        //         setLoading(false)
 
-            } catch (error) {
-                console.log("error", error)
-                setLoading(false)
+        //     } catch (error) {
+        //         console.log("error", error)
+        //         setLoading(false)
 
-                toast.error("Something went wrong. Please try again", {
-                    className: "border border-primary",
-                });
+        //         toast.error("Something went wrong. Please try again", {
+        //             className: "border border-primary",
+        //         });
 
-                error = true
+        //         error = true
 
-            } finally {
-                setLoading(false)
-            }
-            // }
+        //     } finally {
+        //         setLoading(false)
+        //     }
+        //     // }
+        // })
 
-            if(!error) {
-                toast.success("Course content generated successfully", {
-                    className: "border border-primary",
-                });
+        if(!error) {
+            toast.success("Course content generated successfully", {
+                className: "border border-primary",
+            });
 
-                router.replace(`/create-course/${course?.courseId}/finish`);
-            }
-        })
+            router.replace(`/create-course/${course?.courseId}/finish`);
+        }
 
     }
 
