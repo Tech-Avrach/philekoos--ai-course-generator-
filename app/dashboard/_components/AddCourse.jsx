@@ -13,6 +13,8 @@ function AddCourse() {
     <div className="flex justify-between">
         <div>
             <h2 className="text-3xl mb-1">Hello, 
+            <span className="">{" "}
+            </span>
                 <span className="text-primary font-bold">{user?.fullName}
                 </span>
             </h2>

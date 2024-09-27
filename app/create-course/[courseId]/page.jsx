@@ -111,6 +111,10 @@ function CourseLayout({ params }) {
                 className: "border border-primary",
             });
 
+            await db.update(CourseList).set({
+                publish: true
+            })
+
             router.replace(`/create-course/${course?.courseId}/finish`);
         }
 

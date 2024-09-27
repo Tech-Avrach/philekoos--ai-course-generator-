@@ -12,7 +12,10 @@ import GenerateImage from './GenerateImage'
 
 import { db } from '@/configs/db'
 import { eq } from 'drizzle-orm'
-import { CourseList } from '@/configs/schema'
+import { Chapters, CourseList } from '@/configs/schema'
+import service from '@/configs/service'
+import { GenerateChapterContent_AI } from '@/configs/AiModel'
+import LoadingDialog from '../../_components/LoadingDialog'
 
 
 function CourseBasicInfo({ course, GetCourse }) {
@@ -20,6 +23,8 @@ function CourseBasicInfo({ course, GetCourse }) {
     const [courseImage, setCourseImage] = useState(null);
 
     const [courseImageFile, setCourseImageFile] = useState(null);
+
+    const [loading, setLoading] = useState(false);
 
     // console.log("course in basic info", course)
 
@@ -30,12 +35,12 @@ function CourseBasicInfo({ course, GetCourse }) {
         if (course?.courseBanner) {
             setCourseImage(course?.courseBanner)
         }
-    },[ course ])
+    }, [course])
 
 
     const handleStartCourse = async () => {
 
-        if (courseImageFile === null) {
+        if (courseImageFile === null && courseImage === null) {
             toast.error("Please select an image", {
                 className: "border border-primary",
             })
@@ -74,6 +79,76 @@ function CourseBasicInfo({ course, GetCourse }) {
                     toast.success("Course updated successfully", {
                         className: "border border-primary",
                     })
+
+                    const chapters = course?.courseOutput?.chapters;
+
+                    let error = false;
+
+                    chapters.forEach(async (chapter, index) => {
+
+                        const PROMPT = `Explain the concept in Detail on Topic: ${course?.courseOutput?.name}, Chapter: ${chapter?.name}, in JSON Format with a list of array with fields as title, explaination on a given chapter in detail, Code Example(Code field in <precode> format) if applicable`
+
+                        console.log("prompt", PROMPT)
+
+                        // if(index === 0) {
+                        setLoading(true)
+
+                        try {
+
+                            let videoId = "";
+
+                            //Generate Video Url
+                            service.getVideos(course?.courseOutput?.name + ":" + chapter?.name).then((response) => {
+                                console.log("youtube response", response)
+
+                                videoId = response[0]?.id?.videoId;
+                            })
+
+                            //Generate Chapter Content
+                            const result = await GenerateChapterContent_AI.sendMessage(PROMPT);
+                            console.log("Course detail : ", result.response?.text());
+
+                            const content = JSON.parse(result.response?.text());
+
+
+                            //Save Chapter Content + Video Url
+
+                            await db.insert(Chapters).values({
+                                chapterId: index,
+                                courseId: course?.courseId,
+                                content: content,
+                                videoId: videoId
+                            })
+
+                            setLoading(false)
+
+                        } catch (error) {
+                            console.log("error", error)
+                            setLoading(false)
+
+                            toast.error("Something went wrong. Please try again", {
+                                className: "border border-primary",
+                            });
+
+                            error = true
+
+                        } finally {
+                            setLoading(false)
+                        }
+                        // }
+                    })
+
+                    if (!error) {
+                        toast.success("Course content generated successfully", {
+                            className: "border border-primary",
+                        });
+
+                        await db.update(CourseList).set({
+                            publish: true
+                        })
+
+                        router.replace(`/create-course/${course?.courseId}/finish`);
+                    }
 
                 } else {
 
@@ -159,6 +234,7 @@ function CourseBasicInfo({ course, GetCourse }) {
     } else {
         return (
             <div className="p-10 border rounded-xl shadow-sm mt-10">
+                <LoadingDialog loading={loading} />
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
                     <div className="flex flex-col justify-between">
                         <div>
