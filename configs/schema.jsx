@@ -19,7 +19,5 @@ export const CourseList = pgTable('CourseList', {
 export const Chapters = pgTable('Chapters', {
     id: serial('id').primaryKey(),
     courseId: varchar('courseId').notNull(),
-    chapterId: integer('chapterId').notNull(),
-    content: json('content').notNull(),
-    videoId: varchar('videoId').notNull()
+    chapter: json('chapter').notNull(),
 })
