@@ -38,7 +38,7 @@ function UserCourseList() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 mt-5">
             {
                 courseList && courseList.map((course, index) => (
-                    <CourseCard key={index} course={course} />
+                    <CourseCard key={index} course={course} refreshData={getUserCourses}/>
                 )
             )}
         </div>

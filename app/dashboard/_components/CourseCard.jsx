@@ -1,9 +1,36 @@
 import Image from 'next/image'
 import React from 'react'
-import {  HiOutlineBookOpen, HiOutlinePuzzlePiece } from 'react-icons/hi2'
+import {  HiOutlineBookOpen, HiOutlinePuzzlePiece, HiEllipsisVertical } from 'react-icons/hi2'
+import DropdownOption from './DropdownOption'
+import { db } from '@/configs/db'
+import { eq } from 'drizzle-orm'
+import { Chapters, CourseList } from '@/configs/schema'
+import toast from 'react-hot-toast'
 
 
-function CourseCard({ course }) {
+
+function CourseCard({ course, refreshData }) {
+
+    const handleOnDelete = async () => {
+        const courseDeleteResult = await db.delete(CourseList).where(eq(CourseList.courseId, course?.courseId)).returning({id: CourseList.id})
+
+        const chapterDeleteResult = await db.delete(Chapters).where(eq(Chapters.courseId, course?.courseId)).returning({id: Chapters.id})
+
+        console.log("courseDelete", courseDeleteResult)
+
+        console.log("chapterDelete", chapterDeleteResult)
+
+        if (courseDeleteResult[0] && courseDeleteResult[0] !== undefined && chapterDeleteResult[0] && chapterDeleteResult[0] !== undefined) {
+            refreshData();
+            toast.success("Course deleted successfully", {
+                className: "border border-primary",
+            })
+        } else {
+            toast.error("Something went wrong. Please try again", {
+                className: "border border-primary",
+            })
+        }
+    }
 
   return (
     <div className="shadow-sm border rounded-lg p-2 hover:scale-105 transition-all cursor-pointer">
@@ -18,7 +45,14 @@ function CourseCard({ course }) {
                             </div>
         </div>
         <div className="p-3">
-            <h2 className="font-medium text-lg line-clamp-1">{course?.courseOutput?.name}</h2>
+            <div className="flex justify-between gap-2 items-center">
+            <h2 className="line-clamp-1 font-medium text-lg">{course?.courseOutput?.name}</h2>
+            <div className="h-5 w-5 font-extrabold text-xl">
+                <DropdownOption handleOnDelete={handleOnDelete}>
+            <HiEllipsisVertical />
+            </DropdownOption>
+            </div>
+            </div>
 
             <p className="text-sm text-gray-500 line-clamp-4 my-4">{course?.courseOutput?.description}</p>
             
