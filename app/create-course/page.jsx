@@ -162,13 +162,12 @@ function CreateCourse() {
         className: "border border-primary",
       })
 
-
-    } finally {
       setLoading(false)
+
+
     }
     
 
-    setLoading(false)
   }
 
 
