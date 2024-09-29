@@ -18,7 +18,7 @@ import { AiOutlineLoading3Quarters } from "react-icons/ai";
 
 function ChaptersDetailsProgress({ loading, chapters }) {
 
-    console.log("Chapters in ChapterDetailsProgress", chapters)
+    // console.log("Chapters in ChapterDetailsProgress", chapters)
 
     return (
         <div>

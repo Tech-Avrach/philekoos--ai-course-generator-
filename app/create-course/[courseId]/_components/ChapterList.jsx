@@ -20,7 +20,7 @@ function ChapterList({ course, GetCourse }) {
             setChapters(course?.courseOutput?.chapters || []);
         }
 
-        console.log("course in chapter list", course);
+        // console.log("course in chapter list", course);
     }, [course]);
 
     const handleChapterOrder = async (newChaptersOrder) => {
@@ -35,7 +35,7 @@ function ChapterList({ course, GetCourse }) {
                 .returning({ id: CourseList.id });
 
             if (result?.[0]) {
-                GetCourse(); // Refresh the course data
+                // GetCourse(); // Refresh the course data
 
                 toast.success("Course updated successfully", {
                     className: "border border-primary",

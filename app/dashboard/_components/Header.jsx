@@ -1,14 +1,25 @@
 "use client"
 
 import { UserTokenContext } from '@/app/_context/UserTokenContext';
-import { UserButton } from '@clerk/nextjs'
+import { UserButton, useUser } from '@clerk/nextjs'
 import Image from 'next/image'
 import Link from 'next/link'
-import React, { useContext } from 'react'
+import React, { useContext, useEffect } from 'react'
 
 function Header() {
 
-  const { userToken } = useContext(UserTokenContext);
+  const { userToken, getUserTokens } = useContext(UserTokenContext);
+
+  const { user } = useUser();
+
+  useEffect(() => {
+
+    let email = user?.primaryEmailAddress?.emailAddress;
+    let fullName = user?.fullName;
+
+    console.log("email", email, "fullName", fullName)
+    getUserTokens(email, fullName)
+  }, [user])
 
   return (
     <div className="flex justify-between p-5 shadow-md">
