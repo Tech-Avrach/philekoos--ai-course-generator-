@@ -17,6 +17,7 @@ import service from '@/configs/service'
 import { CorrectJsonFormat_AI, GenerateChapterContent_AI } from '@/configs/AiModel'
 import LoadingDialog from '../../_components/LoadingDialog'
 import { useRouter } from 'next/navigation'
+import ChaptersDetailsProgress from './ChaptersDetailsProgress'
 
 
 
@@ -27,6 +28,8 @@ function CourseBasicInfo({ course, GetCourse }) {
     const [courseImageFile, setCourseImageFile] = useState(null);
 
     const [loading, setLoading] = useState(false);
+
+    const [chaptersDetailsToGenerate, setChaptersDetailsToGenerate] = useState([]);
 
     const router = useRouter();
 
@@ -39,7 +42,18 @@ function CourseBasicInfo({ course, GetCourse }) {
         if (course?.courseBanner) {
             setCourseImage(course?.courseBanner)
         }
+
+        let chapterStatus = course?.courseOutput?.chapters?.map((chapter) => {
+            return {
+                ...chapter,
+                status: "pending"
+            }
+        })
+
+        setChaptersDetailsToGenerate(chapterStatus || [])
+
     }, [course])
+
 
 
 
@@ -52,6 +66,21 @@ function CourseBasicInfo({ course, GetCourse }) {
         }
 
         try {
+
+            //add new field to chapters as status and make first chapter as progress
+            let editedChapterStatus = chaptersDetailsToGenerate;
+
+            editedChapterStatus = editedChapterStatus.map((chapter) => {
+                return {
+                    ...chapter,
+                    status: "pending",
+                }
+            })
+
+            editedChapterStatus[0].status = "progress";
+
+
+            setChaptersDetailsToGenerate(editedChapterStatus);
 
             setLoading(true);
 
@@ -97,8 +126,20 @@ function CourseBasicInfo({ course, GetCourse }) {
 
             let chapterInfoArray = [];
 
+
             // Using `for...of` to wait for each async iteration
             for (const [index, chapter] of chapters.entries()) {
+
+
+                let editedChapterStatus = [...chaptersDetailsToGenerate];
+
+                editedChapterStatus[index].status = "progress";
+
+                console.log("editedChapterStatus", editedChapterStatus);
+
+
+                setChaptersDetailsToGenerate(editedChapterStatus);
+
                 const prompt = `Explain the concept in detail on Topic: ${course?.courseOutput?.name}, Chapter: ${chapter?.name}. Provide the response strictly in JSON format, ensuring it is syntactically correct. The JSON should be an array of objects, where each object contains the following fields:
                 - "title": A string representing the title of the section.
                 - "explanation": A detailed explanation of the section.
@@ -201,6 +242,10 @@ function CourseBasicInfo({ course, GetCourse }) {
                     setLoading(false);
                     break; // Exit the loop if an error occurs
                 }
+
+                editedChapterStatus[index].status = "completed";
+
+                setChaptersDetailsToGenerate(editedChapterStatus);
             }
 
             if (!errorOccurred) {
@@ -296,7 +341,7 @@ function CourseBasicInfo({ course, GetCourse }) {
     } else {
         return (
             <div className="p-10 border rounded-xl shadow-sm mt-10">
-                <LoadingDialog loading={loading} />
+                <ChaptersDetailsProgress loading={loading} chapters={chaptersDetailsToGenerate} />
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
                     <div className="flex flex-col justify-between">
                         <div>

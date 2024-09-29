@@ -17,7 +17,7 @@ export default [
         id: 3,
         name:'Creative',
         icon:'/creative.png',
-        example:"(Drawing Course, Painting Course, etc.)",
+        example:"(Drawing Course, Digital Marketing Course, etc.)",
         prompt:"",
     },
 ]
