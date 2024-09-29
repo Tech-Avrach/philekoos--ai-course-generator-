@@ -25,9 +25,9 @@ function Sidebar() {
         },
         {
             id: 1,
-            name: "Upgrade",
+            name: "Purchase",
             icon: <HiOutlineCreditCard /> ,
-            path: "/dashboard/upgrade"
+            path: "/dashboard/purchase"
         },
         {
             id: 1,
