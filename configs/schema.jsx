@@ -21,3 +21,10 @@ export const Chapters = pgTable('Chapters', {
     courseId: varchar('courseId').notNull(),
     chapter: json('chapter').notNull(),
 })
+
+export const Users = pgTable('Users', {
+    id: serial('id').primaryKey(),
+    username: varchar('username').notNull(),
+    email: varchar('email').notNull(),
+    token: integer('token').notNull().default(0),
+})
