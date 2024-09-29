@@ -17,7 +17,7 @@ import { Button } from '@/components/ui/button';
 function TokenGiftPopUp() {
     return (
         <div>
-            <AlertDialog open={true}>
+            <AlertDialog open={false}>
                 <AlertDialogContent>
                     <AlertDialogHeader>
                         <AlertDialogTitle>
