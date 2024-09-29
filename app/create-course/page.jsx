@@ -16,6 +16,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { useUser } from '@clerk/nextjs'
 import { CourseList } from '@/configs/schema'
 import { useRouter } from 'next/navigation'
+import { useMistralAi } from '@/configs/MistralAiModel'
 
 function CreateCourse() {
   const StepperOptions = [{
@@ -108,21 +109,41 @@ function CreateCourse() {
 
       setLoading(true)
 
-      const BASIC_PROMPT = "Generate A Course Tutorial on Following Detail With fiels as Name, Description, a detailed prompt to generate a banner image of that course as imagePrompt, NoOfChapters, Along With Chapter Name, about, Duration."
+      let BASIC_PROMPT = "Generate A Course Tutorial on Following Detail With fiels as name, description, a detailed prompt to generate a banner image of that course as imagePrompt, noOfChapters, Along With Chapter name as name, about, duration."
 
-      const USER_INPUT_PROMPT = `Category: ${userCourseInput?.category}, Topic: ${userCourseInput?.topic}, Level: ${userCourseInput?.level}, Duration: ${userCourseInput?.duration}, NoOfChapters: ${userCourseInput?.noOfChapters}`
+       let USER_INPUT_PROMPT = `Category: ${userCourseInput?.category}, Topic: ${userCourseInput?.topic}, Level: ${userCourseInput?.level}, Duration: ${userCourseInput?.duration}, NoOfChapters: ${userCourseInput?.noOfChapters}`
   
-      const FINAL_PROMPT = `${BASIC_PROMPT} ${USER_INPUT_PROMPT} In JSON Format.`
+      let FINAL_PROMPT = `${BASIC_PROMPT} ${USER_INPUT_PROMPT} In JSON Format.`
   
       console.log("FINAL_PROMPT", FINAL_PROMPT)
   
   
-      const result = await GenerateCourseLayout.sendMessage(FINAL_PROMPT)
+      try {
+
+          const result = await GenerateCourseLayout.sendMessage(FINAL_PROMPT)
       console.log(result.response?.text());
   
       console.log("result", JSON.parse(result.response?.text()))
 
       SaveCourseLayoutInDb(JSON.parse(result.response?.text()));
+
+             
+        
+      } catch (error) {
+
+        console.log("error with Gemini Ai in Course layout generation", error)
+
+        let MISTRAL_FINAL_PROMPT = `Generate A Course Tutorial on Following Detail With fiels as name, description, a detailed prompt to generate a banner image of that course as imagePrompt, noOfChapters,category, topic, level, duration, Along With Chapter name as name, about, duration. ${USER_INPUT_PROMPT} In JSON Format. description of course and about of course must be in little detail. do not give a single word outside of JSON. do not use markdown. response should be in string, the response should be such that it can be parsed as JSON`
+
+        let mistralResult = await useMistralAi(MISTRAL_FINAL_PROMPT);
+
+        if (mistralResult.startsWith("```json") && mistralResult.endsWith("```")) {
+          // Extract the JSON content
+          mistralResult = mistralResult.slice(7, -3).trim(); // Removes ```JSON at the start and ``` at the end
+      }
+
+        SaveCourseLayoutInDb(JSON.parse(mistralResult));
+      }
 
     } catch (error) {
       
@@ -136,6 +157,8 @@ function CreateCourse() {
   }
 
   const SaveCourseLayoutInDb = async (courseLayout) => {
+
+    console.log("Course Layout: ", courseLayout)
     
     try {
       setLoading(true)

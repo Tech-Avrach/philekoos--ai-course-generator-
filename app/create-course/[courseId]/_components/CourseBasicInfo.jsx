@@ -56,257 +56,320 @@ function CourseBasicInfo({ course, GetCourse }) {
     }, [course])
 
 
-    const handleStartCourse = async () => {
+    // const handleStartCourse = async () => {
 
-        useMistralAi();
+    //     useMistralAi();
+    // }
+
+    const uploadImageToCloudinary = async () => {
+        const formData = new FormData();
+                formData.append("image", courseImageFile);
+                formData.append("folderName", course.courseId);
+
+                const response = await axios.post("/api/image-upload", formData);
+                const imageUrl = response.data.url;
+
+                console.log("Uploaded image URL:", imageUrl);
+
+                // Update course banner in the database
+                const result = await db.update(CourseList)
+                    .set({ courseBanner: imageUrl })
+                    .where(eq(CourseList.courseId, course?.courseId))
+                    .returning({ id: CourseList.id });
+
+                if (!result[0]) {
+                    toast.error("Something went wrong. Please try again", {
+                        className: "border border-primary",
+                    });
+                    return;
+                }
+
+                GetCourse();
+                toast.success("Course Image updated successfully", {
+                    className: "border border-primary",
+                });
     }
 
 
+    const getChapterDetailPrompt = (courseName, chapter) => {
+
+        return `Explain the concept in detail on Topic: ${courseName}, Chapter: ${chapter}. Provide the response strictly in JSON format, ensuring it is syntactically correct. The JSON should be an array of objects, where each object contains the following fields:
+                - "title": A string representing the title of the section.
+                - "explanation": A detailed explanation of the section.
+                - "code": A string with a code example enclosed in <precode> tags if applicable. If no code is applicable, use an empty string ("").
+
+                Important requirements:
+                1. Ensure the JSON is valid and properly formatted.
+                2. Use commas correctly to separate fields and objects.
+                3. Do not include any trailing commas.
+                4. Enclose all keys and string values in double quotes.
+                5. Do not provide any additional text, explanations, or commentary outside the JSON structure.
+
+                Before providing the response, validate that the JSON is complete and error-free.`;
+    }
 
 
-    // const handleStartCourse = async () => {
-    //     if (courseImageFile === null && courseImage === null) {
-    //         toast.error("Please select an image", {
-    //             className: "border border-primary",
-    //         });
-    //         return;
-    //     }
+    const getCorrectJsonPrompt = (contentText) => {
+        return `Given the following JSON data, identify and correct any syntax issues to ensure it is properly formatted and can be parsed using JSON.parse. Make sure to:
+                        1. Enclose all keys and string values in double quotes.
+                        2. Correct any instances where embedded double quotes are not escaped (e.g., use \\" inside strings).
+                        3. Validate that the JSON structure is an array of objects, with fields such as "title", "explanation", and "code".
+                        4. Ensure all commas, brackets, and braces are correctly placed.
+                        5. Return only the corrected JSON without any additional commentary or explanation.
 
-    //     try {
-
-    //         //add new field to chapters as status and make first chapter as progress
-    //         let editedChapterStatus = chaptersDetailsToGenerate;
-
-    //         editedChapterStatus = editedChapterStatus.map((chapter) => {
-    //             return {
-    //                 ...chapter,
-    //                 status: "pending",
-    //             }
-    //         })
-
-    //         editedChapterStatus[0].status = "progress";
+                        JSON data to correct:
+                        ${contentText}
+                        `;
+    }
 
 
-    //         setChaptersDetailsToGenerate(editedChapterStatus);
+    const getVideoUrlId = async(courseName, chapter) => {
 
-    //         setLoading(true);
-
-
-
-    //         // Upload image
-
-    //         if (courseImage?.startsWith("https://res.cloudinary.com/")) {
-
-    //             console.log("The image is from Cloudinary!");
-
-    //         } else {
-    //             const formData = new FormData();
-    //             formData.append("image", courseImageFile);
-    //             formData.append("folderName", course.courseId);
-
-    //             const response = await axios.post("/api/image-upload", formData);
-    //             const imageUrl = response.data.url;
-
-    //             console.log("Uploaded image URL:", imageUrl);
-
-    //             // Update course banner in the database
-    //             const result = await db.update(CourseList)
-    //                 .set({ courseBanner: imageUrl })
-    //                 .where(eq(CourseList.courseId, course?.courseId))
-    //                 .returning({ id: CourseList.id });
-
-    //             if (!result[0]) {
-    //                 toast.error("Something went wrong. Please try again", {
-    //                     className: "border border-primary",
-    //                 });
-    //                 return;
-    //             }
-
-    //             GetCourse();
-    //             toast.success("Course Image updated successfully", {
-    //                 className: "border border-primary",
-    //             });
-    //         }
-
-    //         const chapters = course?.courseOutput?.chapters;
-    //         let errorOccurred = false;
-
-    //         let chapterInfoArray = [];
+                    let videoResponse = await service.getVideos(`${courseName}:${chapter}`);
+                    let id = videoResponse[0]?.id?.videoId || "";
+                    
+                    return id
+    }
 
 
-    //         // Using `for...of` to wait for each async iteration
-    //         for (const [index, chapter] of chapters.entries()) {
+    const handleStartCourse = async () => {
+        if (courseImageFile === null && courseImage === null) {
+            toast.error("Please select an image", {
+                className: "border border-primary",
+            });
+            return;
+        }
+
+        try {
+
+            //add new field to chapters as status and make first chapter as progress
+            let editedChapterStatus = chaptersDetailsToGenerate;
+
+            editedChapterStatus = editedChapterStatus.map((chapter) => {
+                return {
+                    ...chapter,
+                    status: "pending",
+                }
+            })
+
+            editedChapterStatus[0].status = "progress";
 
 
-    //             let editedChapterStatus = [...chaptersDetailsToGenerate];
+            setChaptersDetailsToGenerate(editedChapterStatus);
 
-    //             editedChapterStatus[index].status = "progress";
-
-    //             console.log("editedChapterStatus", editedChapterStatus);
+            setLoading(true);
 
 
-    //             setChaptersDetailsToGenerate(editedChapterStatus);
 
-    //             const prompt = `Explain the concept in detail on Topic: ${course?.courseOutput?.name}, Chapter: ${chapter?.name}. Provide the response strictly in JSON format, ensuring it is syntactically correct. The JSON should be an array of objects, where each object contains the following fields:
-    //             - "title": A string representing the title of the section.
-    //             - "explanation": A detailed explanation of the section.
-    //             - "code": A string with a code example enclosed in <precode> tags if applicable. If no code is applicable, use an empty string ("").
+            // Upload image
 
-    //             Important requirements:
-    //             1. Ensure the JSON is valid and properly formatted.
-    //             2. Use commas correctly to separate fields and objects.
-    //             3. Do not include any trailing commas.
-    //             4. Enclose all keys and string values in double quotes.
-    //             5. Do not provide any additional text, explanations, or commentary outside the JSON structure.
+            if (courseImage?.startsWith("https://res.cloudinary.com/")) {
 
-    //             Before providing the response, validate that the JSON is complete and error-free.`;
+                console.log("The image is from Cloudinary!");
 
+            } else {
+                
+                uploadImageToCloudinary()
+            }
 
-    //             console.log("Prompt:", prompt);
+            const chapters = course?.courseOutput?.chapters;
+            let errorOccurred = false;
 
-    //             try {
-    //                 // Generate video URL
-    //                 const videoResponse = await service.getVideos(`${course?.courseOutput?.name}:${chapter?.name}`);
-    //                 const videoId = videoResponse[0]?.id?.videoId || "";
-
-    //                 // Generate chapter content
-    //                 const contentResult = await GenerateChapterContent_AI.sendMessage(prompt);
-    //                 const contentText = contentResult.response?.text();
-
-    //                 // Validate JSON
-    //                 let content;
-    //                 try {
-    //                     content = JSON.parse(contentText);
-    //                 } catch (jsonError) {
-    //                     console.error("Invalid JSON format received:", jsonError);
-
-    //                     console.log("contentText", contentText)
-
-    //                     // toast.error("Invalid content received. Please try again.", {
-    //                     //     className: "border border-primary",
-    //                     // });
-    //                     // errorOccurred = true;
-    //                     // break; // Exit the loop on JSON parsing error
-
-    //                    try {
-
-    //                     const PROMPT = `Given the following JSON data, identify and correct any syntax issues to ensure it is properly formatted and can be parsed using JSON.parse. Make sure to:
-    //                     1. Enclose all keys and string values in double quotes.
-    //                     2. Correct any instances where embedded double quotes are not escaped (e.g., use \\" inside strings).
-    //                     3. Validate that the JSON structure is an array of objects, with fields such as "title", "explanation", and "code".
-    //                     4. Ensure all commas, brackets, and braces are correctly placed.
-    //                     5. Return only the corrected JSON without any additional commentary or explanation.
-
-    //                     JSON data to correct:
-    //                     ${contentText}
-    //                     `;
-
-    //                     const CorrectJsonResult = await CorrectJsonFormat_AI.sendMessage(PROMPT);
+            let chapterInfoArray = [];
 
 
-    //                     content = JSON.parse(CorrectJsonResult.response?.text());
+            // Using `for...of` to wait for each async iteration
+            for (const [index, chapter] of chapters.entries()) {
+
+
+                let editedChapterStatus = [...chaptersDetailsToGenerate];
+
+                editedChapterStatus[index].status = "progress";
+
+                let courseName = course?.courseOutput?.name;
+
+                let chapterName = chapter?.name;
+
+
+                setChaptersDetailsToGenerate(editedChapterStatus);
+
+                let prompt = getChapterDetailPrompt(courseName, chapterName);
+
+                let correctJsonPrompt;
+
+
+                console.log("Prompt:", prompt);
+
+                let contentResult = null;
+
+                let contentText = null;
+
+                try {
+                    // Generate video URL
+                    const videoId = getVideoUrlId(course?.courseOutput?.name, chapter?.name)
+
+                    // Generate chapter content
+                    try {
+
+                        contentResult = await GenerateChapterContent_AI.sendMessage(prompt);
+
+                        contentText = contentResult.response?.text();
+
+                    } catch (error) {
+
+                        console.log("Generate Chapter Content Gemini", error)
                         
-    //                    } catch (error) {
+                        try {
 
-    //                     console.error("Error parsing JSON:", error);
+                            contentResult = await useMistralAi(prompt);
 
-    //                     toast.error("Invalid content received. Please try again.", {
-    //                         className: "border border-primary",
-    //                     });
-    //                     errorOccurred = true;
-    //                     break; // Exit the loop on JSON parsing error
+                            if (contentResult.startsWith("```json") && contentResult.endsWith("```")) {
+                                // Extract the JSON content
+                                contentResult = contentResult.slice(7, -3).trim(); // Removes ```JSON at the start and ``` at the end
+                            }
+
+                            contentText = contentResult
+
+
+                        } catch (error) {
+
+                            console.log("Mistral course detail generate", error)
+
+                            toast.error("Something went wrong. Please try again", {
+                                className: "border border-primary",
+                            });
+
+                            errorOccurred=true;
+
+                            break;
+                        }
+                    }
+
+                    // Validate JSON
+                    let content;
+                    try {
+                        content = JSON.parse(contentText);
+                    } catch (jsonError) {
+                        console.error("Invalid JSON format received:", jsonError);
+
+                        console.log("contentText", contentText)
+
+
+                       try {
+
+                        correctJsonPrompt = getCorrectJsonPrompt(contentText);
+
+                        const CorrectJsonResult = await CorrectJsonFormat_AI.sendMessage(correctJsonPrompt);
+
+
+                        content = JSON.parse(CorrectJsonResult.response?.text());
                         
-    //                    }
-    //                 }
+                       } catch (error) {
 
-    //                 const oneChapter = {
-    //                     chapterId: index,
-    //                     name: chapter?.name,
-    //                     content: content,
-    //                     videoId: videoId
-    //                 }
+                        console.error("Error parsing JSON Gemini:", error);
 
-    //                 chapterInfoArray.push(oneChapter);
+                        
 
+                        try {
+                            
+                            let result = await useMistralAi(correctJsonPrompt);
 
-    //                 console.log("Chapter Array inside function : ", chapterInfoArray)
+                            if (result.startsWith("```json") && result.endsWith("```")) {
+                                // Extract the JSON content
+                                result = result.slice(7, -3).trim(); // Removes ```JSON at the start and ``` at the end
+                            }
 
+                            content = JSON.parse(result);
 
-    //                 // // Save Chapter Content + Video URL
-    //                 // await db.insert(Chapters).values({
-    //                 //     chapterId: index,
-    //                 //     courseId: course?.courseId,
-    //                 //     content: content,
-    //                 //     videoId: videoId
-    //                 // });
+                        } catch (error) {
 
-    //             } catch (error) {
-    //                 console.error("Error generating chapter content:", error);
-    //                 toast.error("Something went wrong. Please try again", {
-    //                     className: "border border-primary",
-    //                 });
-    //                 errorOccurred = true;
-    //                 setLoading(false);
-    //                 break; // Exit the loop if an error occurs
-    //             }
+                            console.log("Mistral correct json", error)
+                            
+                            toast.error("Something went wrong. Please try again", {
+                                className: "border border-primary",
+                            });
 
-    //             editedChapterStatus[index].status = "completed";
+                            errorOccurred = true;
+                            setLoading(false);
+                            break; // Exit the loop if an error occurs
+                        }
+                        
+                       }
+                    }
 
-    //             setChaptersDetailsToGenerate(editedChapterStatus);
-    //         }
+                    const oneChapter = {
+                        chapterId: index,
+                        name: chapter?.name,
+                        content: content,
+                        videoId: videoId
+                    }
 
-    //         if (!errorOccurred) {
-
-    //             // Save Chapter Content + Video URL
-    //             try {
-
-    //                 await db.insert(Chapters).values({
-    //                     courseId: course?.courseId,
-    //                     chapter: chapterInfoArray,
-    //                 });
-
-    //                 toast.success("Course content generated successfully", {
-    //                     className: "border border-primary",
-    //                 });
-
-    //                 console.log("chapterInfoArray", chapterInfoArray)
-
-    //                 await db.update(CourseList).set({ publish: true }).where(eq(CourseList.courseId, course?.courseId)).returning({ id: CourseList.id });
+                    chapterInfoArray.push(oneChapter);
 
 
-    //                 router.replace(`/create-course/${course?.courseId}/finish`);
+                    console.log("Chapter Array inside function : ", chapterInfoArray)
 
-    //             } catch (error) {
 
-    //                 console.log("error in Course Basic", error)
+                } catch (error) {
+                    console.error("Error generating chapter content:", error);
+                    toast.error("Something went wrong. Please try again", {
+                        className: "border border-primary",
+                    });
+                    errorOccurred = true;
+                    setLoading(false);
+                    break; // Exit the loop if an error occurs
+                }
 
-    //                 setChaptersDetailsToGenerate([]);
+                editedChapterStatus[index].status = "completed";
 
-    //                 toast.error("Something went wrong. Please try again", {
-    //                     className: "border border-primary",
-    //                 });
-    //                 setLoading(false);
-    //             }
-    //         } 
-    //         // else {
-    //         //     const chapterDeleteResult = await db.delete(Chapters).where(eq(Chapters.courseId, course?.courseId)).returning({ id: Chapters.id })
+                setChaptersDetailsToGenerate(editedChapterStatus);
+            }
 
-    //         //     console.log("chapterDelete", chapterDeleteResult)
+            if (!errorOccurred) {
 
-    //         //     setLoading(false);
-    //         // }
+                // Save Chapter Content + Video URL
+                try {
 
-    //     } catch (error) {
-    //         setLoading(false);
+                    await db.insert(Chapters).values({
+                        courseId: course?.courseId,
+                        chapter: chapterInfoArray,
+                    });
 
-    //         setChaptersDetailsToGenerate([]);
+                    toast.success("Course content generated successfully", {
+                        className: "border border-primary",
+                    });
 
-    //         console.error("Error:", error);
-    //         toast.error("Something went wrong. Please try again", {
-    //             className: "border border-primary",
-    //         });
-    //     }
-    // };
+                    console.log("chapterInfoArray", chapterInfoArray)
+
+                    await db.update(CourseList).set({ publish: true }).where(eq(CourseList.courseId, course?.courseId)).returning({ id: CourseList.id });
+
+
+                    router.replace(`/create-course/${course?.courseId}/finish`);
+
+                } catch (error) {
+
+                    console.log("error in Course Basic", error)
+
+                    setChaptersDetailsToGenerate([]);
+
+                    toast.error("Something went wrong. Please try again", {
+                        className: "border border-primary",
+                    });
+                    setLoading(false);
+                }
+            } 
+
+        } catch (error) {
+            setLoading(false);
+
+            setChaptersDetailsToGenerate([]);
+
+            console.error("Error:", error);
+            toast.error("Something went wrong. Please try again", {
+                className: "border border-primary",
+            });
+        }
+    };
 
 
     const onFileChange = async (event) => {

@@ -4,11 +4,16 @@ const apiKey = process.env.NEXT_PUBLIC_MISTRAL_API_KEY;
 
 const client = new Mistral({apiKey: apiKey});
 
-export const useMistralAi = async () => {
+export const useMistralAi = async (prompt) => {
+
+    console.log('Mistral AI Prompt:', prompt);
+
     const chatResponse = await client.chat.complete({
         model: 'mistral-large-latest',
-        messages: [{role: 'user', content: 'What is the best French cheese?'}],
+        messages: [{role: 'user', content: prompt}],
       });
       
-      console.log('Chat:', chatResponse.choices[0].message.content);
+      console.log('Mistral AI Response:', chatResponse.choices[0].message.content);
+
+      return chatResponse.choices[0].message.content
 }

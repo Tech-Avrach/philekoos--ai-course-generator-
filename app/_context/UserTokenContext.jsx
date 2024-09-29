@@ -12,6 +12,11 @@ export const UserTokenProvider = ({ children }) => {
     const [userToken, setUserToken] = useState(0);
 
     const getUserTokens = async (email, userName) => {
+
+        console.log("email inside getUserTokens", email)
+
+        console.log("userName inside getUserTokens", userName)
+
         const result = await db
         .select()
         .from(Users)
@@ -19,7 +24,10 @@ export const UserTokenProvider = ({ children }) => {
 
         console.log("result", result)
 
-        setUserToken(result[0]?.token)
+        if(result.length > 0) {
+
+            setUserToken(result[0]?.token);
+        }
 
         return result[0]?.token;
     }
