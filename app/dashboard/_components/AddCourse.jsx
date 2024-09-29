@@ -1,13 +1,16 @@
 "use client"
 
+import { UserTokenContext } from '@/app/_context/UserTokenContext';
 import { Button } from '@/components/ui/button';
 import { useUser } from '@clerk/nextjs'
 import Link from 'next/link';
-import React from 'react'
+import React, { useContext } from 'react'
 
 function AddCourse() {
 
     const { user } = useUser();
+
+    const { getUserTokens, userToken } = useContext(UserTokenContext)
 
   return (
     <div className="flex justify-between">
@@ -20,9 +23,18 @@ function AddCourse() {
             </h2>
             <p className="text-sm text-gray-500">Create new course with AI, Share with friends and Earn from it.</p>
         </div>
-        <Link href={'/create-course'}>
-          <Button>+ Create AI Course</Button>
-        </Link>
+
+        {
+            userToken  && userToken > 0 ? 
+            <Link href={'/create-course'}>
+              <Button>+ Create AI Course</Button>
+            </Link> 
+              : 
+            <Link href={'/dashboard/purchase'}>
+              <Button>+ Create AI Course</Button>
+            </Link>
+        }
+        
     </div>
   )
 }

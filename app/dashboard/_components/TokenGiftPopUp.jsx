@@ -14,10 +14,10 @@ import Image from 'next/image'
 import { RxCross2 } from "react-icons/rx";
 import { Button } from '@/components/ui/button';
 
-function TokenGiftPopUp() {
+function TokenGiftPopUp({ newUser, setNewUser }) {
     return (
         <div>
-            <AlertDialog open={false}>
+            <AlertDialog open={newUser}>
                 <AlertDialogContent>
                     <AlertDialogHeader>
                         <AlertDialogTitle>
@@ -39,7 +39,7 @@ function TokenGiftPopUp() {
                     <AlertDialogFooter>
 
                         <div className="flex justify-center items-center w-full">
-                            <Button>Claim Gift</Button>
+                            <Button onClick={() => setNewUser(false)}>Claim Gift</Button>
                         </div>
 
 

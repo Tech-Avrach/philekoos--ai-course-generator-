@@ -5,14 +5,17 @@ import { CourseList } from '@/configs/schema';
 import { useUser } from '@clerk/nextjs';
 import { and, eq } from 'drizzle-orm';
 import { useRouter } from 'next/navigation';
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import CourseBasicInfo from '../_components/CourseBasicInfo';
 import FinishedCourseBasic from './_components/FinishedCourseBasic';
 import ConfettiShow from '@/app/_components/Confetti';
 import { FaRegCopy } from "react-icons/fa";
+import { UserTokenContext } from '@/app/_context/UserTokenContext';
 
 function FinishScreen({ params }) {
   const { user } = useUser();
+
+  const { userToken, updateUserToken } = useContext(UserTokenContext)
 
   const router = useRouter();
 
@@ -37,10 +40,23 @@ function FinishScreen({ params }) {
   useEffect(() => {
     console.log("params", params)
 
-    console.log("user", user)
-
     params && GetCourse();
-  }, [params, user])
+  }, [params])
+
+
+  useEffect(() => {
+
+    let email = user?.primaryEmailAddress?.emailAddress
+    let fullName = user?.fullName
+
+    if (email && fullName) {
+     
+      let newToken = userToken - 1;
+
+      updateUserToken(newToken, email, fullName)
+    }
+
+  }, [user])
 
   const GetCourse = async () => {
     const result = await db.select().from(CourseList).where(and(
