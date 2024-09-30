@@ -1,28 +1,81 @@
+"use client"
 import { Button } from '@/components/ui/button'
 import Image from 'next/image'
-import React from 'react'
+import React, { useEffect } from 'react'
+import axios from 'axios'
 
 function PurchasePage() {
   const plans = [
     {
       "name": "Starter Pack",
-      "price": "$1",
+      "price": 10,
       "tokens": 1,
       "description": "Try it out with just one token. Great for a quick start!"
     },
     {
       "name": "Saver Bundle",
-      "price": "$8",
+      "price": 80,
       "tokens": 10,
       "description": "Get more for less! Perfect if you need a few extra tokens."
     },
     {
       "name": "Big Deal Pack",
-      "price": "$15",
+      "price": 150,
       "tokens": 20,
       "description": "The best value! Grab 20 tokens and save big."
     }
   ]
+
+  useEffect(() => {
+    // Dynamically add Razorpay script
+    const script = document.createElement('script');
+    script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+    script.async = true;
+    document.body.appendChild(script);
+    
+    // Cleanup the script when component unmounts
+    return () => {
+      document.body.removeChild(script);
+    };
+  }, []);
+
+  const handlePayment = async (amount) => {
+    try {
+      // Create an order from the server using Axios
+      const orderResponse = await axios.post('/api/create-order', { amount });
+      const orderData = orderResponse.data;
+
+      console.log("orderData", orderData)
+  
+      // Initialize Razorpay
+      const options = {
+        key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
+        amount: amount * 100,
+        currency: "INR",
+        name: "Your App Name",
+        description: "Token Purchase",
+        order_id: orderData.id, // Use the order ID from the server
+        handler: (response) => {
+          alert(`Payment successful! Payment ID: ${response.razorpay_payment_id}`);
+        },
+        prefill: {
+          name: "Your Name",
+          email: "email@example.com",
+          contact: "9999999999",
+        },
+        theme: {
+          color: "#3399cc",
+        },
+      };
+  
+      const razorpay = new window.Razorpay(options);
+      razorpay.open();
+    } catch (error) {
+      console.error('Error creating order:', error);
+    }
+  };
+
+  
   
   return (
     <div className="flex flex-col items-center p-6 min-h-screen">
@@ -48,9 +101,11 @@ function PurchasePage() {
             
             <p className="text-gray-600 text-center mb-3 md:mb-4 text-sm md:text-base">{plan.description}</p>
             
-            <Button className="min-w-24 w-full md:w-auto">
-              {plan.price}
-            </Button>
+            <Button className="min-w-24 w-full md:w-auto"
+             onClick={() => handlePayment(plan.price)}
+              >
+  ₹ {plan.price}
+</Button>
           </div>
         ))}
       </div>
