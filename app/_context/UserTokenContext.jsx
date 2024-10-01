@@ -22,14 +22,13 @@ export const UserTokenProvider = ({ children }) => {
         .from(Users)
         .where(eq(Users.email, email), eq(Users.username, userName))
 
-        console.log("result", result)
+        console.log("result token", result)
 
         if(result.length > 0) {
 
             setUserToken(result[0]?.token);
+            return result[0]?.token;
         }
-
-        return result[0]?.token;
     }
 
     const updateUserToken = async (token, email, userName) => {

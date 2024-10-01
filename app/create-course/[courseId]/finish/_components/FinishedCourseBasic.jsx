@@ -181,13 +181,13 @@ function FinishedCourseBasic({ course }) {
                     {
                         courseImage ? (
                             <div className="relative">
-                                <label htmlFor="upload-image" className="group">
-                                    <div className="relative cursor-copy">
+                                <label htmlFor="upload-image" >
+                                    <div className="relative">
                                         <Image
                                             src={courseImage}
                                             width={350}
                                             height={350}
-                                            className="rounded-xl w-full object-cover h-[350px] transition duration-300 ease-in-out group-hover:brightness-50"
+                                            className="rounded-xl w-full object-cover h-[350px] transition duration-300 ease-in-out"
                                             alt="course image"
                                         />
 

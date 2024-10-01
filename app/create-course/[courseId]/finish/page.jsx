@@ -11,11 +11,14 @@ import FinishedCourseBasic from './_components/FinishedCourseBasic';
 import ConfettiShow from '@/app/_components/Confetti';
 import { FaRegCopy } from "react-icons/fa";
 import { UserTokenContext } from '@/app/_context/UserTokenContext';
+import CourseUrl from './_components/CourseUrl';
+import CourseDetail from '../_components/CourseDetail';
+import FinishedChapterList from './_components/FinishedChapterList';
 
 function FinishScreen({ params }) {
   const { user } = useUser();
 
-  const { userToken, updateUserToken } = useContext(UserTokenContext)
+  const { userToken, updateUserToken, getUserTokens } = useContext(UserTokenContext)
 
   const router = useRouter();
 
@@ -27,36 +30,58 @@ function FinishScreen({ params }) {
 
   const COURSE_URL = process.env.NEXT_PUBLIC_HOST_NAME + "/course/view/" + params.courseId
 
-  const copyToClipboard = (text) => {
-    navigator.clipboard.writeText(text);
-
-    setCopied(true)
-
-    setTimeout(() => {
-      setCopied(false)
-    }, 1000)
-  };
 
   useEffect(() => {
     console.log("params", params)
 
-    params && GetCourse();
-  }, [params])
+   if(params && user) {
+    GetCourse();
+   }
+
+  }, [params, user])
 
 
-  useEffect(() => {
+  const updateToken = async () => {
 
     let email = user?.primaryEmailAddress?.emailAddress
     let fullName = user?.fullName
 
     if (email && fullName) {
-     
-      let newToken = userToken - 1;
 
-      updateUserToken(newToken, email, fullName)
+      let token = await getUserTokens(email, fullName);
+
+      if(token && token <= 0) {
+        
+        router.push("/dashboard")
+      } else {
+
+
+        let newToken = token - 1;
+
+        console.log("token inside finish", token)
+
+        console.log("newToken", newToken)
+
+        updateUserToken(newToken, email, fullName)
+      }
     }
 
-  }, [user])
+  }
+
+
+  // useEffect(() => {
+
+  //   let email = user?.primaryEmailAddress?.emailAddress
+  //   let fullName = user?.fullName
+
+  //   if (email && fullName) {
+     
+  //     let newToken = userToken - 1;
+
+  //     updateUserToken(newToken, email, fullName)
+  //   }
+
+  // }, [user])
 
   const GetCourse = async () => {
     const result = await db.select().from(CourseList).where(and(
@@ -64,8 +89,14 @@ function FinishScreen({ params }) {
       eq(CourseList.createdBy, user?.primaryEmailAddress?.emailAddress)
     ))
 
-    if (result[0] && result[0] !== undefined) setCourse(result[0])
+    console.log("Course result", result)
+
+    if (result[0] && result[0] !== undefined) {
+      setCourse(result[0])
     console.log("course", result[0])
+
+    updateToken()
+    }
   }
   return (
     <div className="px-10 md:px-20 lg:px-44 my-7">
@@ -75,13 +106,11 @@ function FinishScreen({ params }) {
       <ConfettiShow />
       <FinishedCourseBasic course={course} />
 
-      <h2 className="mt-3">Course URL:</h2>
-      <div className="border p-2 rounded-md flex justify-between items-center">
-        <h2 className="text-cente text-gray-400">{COURSE_URL}</h2>
-        <h2 className={copied ? "text-primary cursor-pointer" : "cursor-pointer text-gray-400"} onClick={() => copyToClipboard(COURSE_URL)}>
-          <FaRegCopy className="cursor-pointer h-5 w-5" />
-        </h2>
-      </div>
+      <CourseUrl COURSE_URL={COURSE_URL} />
+
+      <CourseDetail course={course} />
+
+      <FinishedChapterList course={course} />
     </div>
   )
 }
