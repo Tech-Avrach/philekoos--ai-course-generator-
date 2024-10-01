@@ -6,10 +6,8 @@ import { useUser } from '@clerk/nextjs';
 import { and, eq } from 'drizzle-orm';
 import { useRouter } from 'next/navigation';
 import React, { useState, useEffect, useContext } from 'react'
-import CourseBasicInfo from '../_components/CourseBasicInfo';
 import FinishedCourseBasic from './_components/FinishedCourseBasic';
 import ConfettiShow from '@/app/_components/Confetti';
-import { FaRegCopy } from "react-icons/fa";
 import { UserTokenContext } from '@/app/_context/UserTokenContext';
 import CourseUrl from './_components/CourseUrl';
 import CourseDetail from '../_components/CourseDetail';

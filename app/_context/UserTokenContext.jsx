@@ -32,6 +32,9 @@ export const UserTokenProvider = ({ children }) => {
     }
 
     const updateUserToken = async (token, email, userName) => {
+
+        if(userToken === 0) return 0;
+
         const result = await db
         .update(Users)
         .set({ token })

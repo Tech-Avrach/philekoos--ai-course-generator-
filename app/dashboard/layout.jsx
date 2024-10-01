@@ -1,6 +1,7 @@
 import React from 'react'
 import Sidebar from './_components/Sidebar'
-import Header from './_components/Header'
+import Header from '../_components/Header'
+// import Header from './_components/Header'
 
 
 function DashboardLayout({children}) {

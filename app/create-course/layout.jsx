@@ -1,6 +1,6 @@
 import React from 'react'
-import Header from '../dashboard/_components/Header'
 import { UserInputProvider } from '../_context/UserInputContext'
+import Header from '../_components/Header'
 
 
 

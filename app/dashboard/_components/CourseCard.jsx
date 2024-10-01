@@ -6,6 +6,7 @@ import { db } from '@/configs/db'
 import { eq } from 'drizzle-orm'
 import { Chapters, CourseList } from '@/configs/schema'
 import toast from 'react-hot-toast'
+import Link from 'next/link'
 
 
 
@@ -33,9 +34,11 @@ function CourseCard({ course, refreshData }) {
     }
 
     return (
-        <div className="shadow-sm border rounded-lg p-2 hover:scale-105 transition-all cursor-pointer">
+        <div className="shadow-sm border rounded-lg p-2 hover:scale-105 transition-all">
             <div className="relative">
-                <Image src={course.courseBanner} alt={course.name} width={300} height={300} className="w-full h-[200px] rounded-sm" />
+                <Link href={`/course/${course?.courseId}`}>
+                <Image src={course.courseBanner} alt={course.name} width={300} height={300} className="w-full h-[200px] rounded-sm cursor-pointer" />
+                </Link>
 
                 <div className="absolute top-2 left-2 p-1 px-2 border border-primary w-fit rounded-full bg-blue-100">
                     <h2 className="text-sm flex gap-1 items-center text-primary">

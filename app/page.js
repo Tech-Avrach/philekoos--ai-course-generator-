@@ -7,7 +7,7 @@ export default function Home() {
   return (
  <div>
     {/* HEADER */}
-    <Header/>
+    <Header showLogo={true}/>
     {/* HERO SECTION */}
     <Hero />
  </div>

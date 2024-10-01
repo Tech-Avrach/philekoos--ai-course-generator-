@@ -13,6 +13,7 @@ import axios from 'axios'
 import { db } from '@/configs/db'
 import { eq } from 'drizzle-orm'
 import { CourseList } from '@/configs/schema'
+import Link from 'next/link';
 
 function FinishedCourseBasic({ course }) {
     const [courseImage, setCourseImage] = useState(null);
@@ -31,71 +32,71 @@ function FinishedCourseBasic({ course }) {
     },[ course ])
 
 
-    const handleStartCourse = async () => {
+    // const handleStartCourse = async () => {
 
-        if (courseImageFile === null) {
-            toast.error("Please select an image", {
-                className: "border border-primary",
-            })
-            return
-        }
+    //     if (courseImageFile === null) {
+    //         toast.error("Please select an image", {
+    //             className: "border border-primary",
+    //         })
+    //         return
+    //     }
 
-        try {
+    //     try {
 
-            const formData = new FormData();
-            formData.append("image", courseImageFile);
-            formData.append("folderName", course.courseId);
+    //         const formData = new FormData();
+    //         formData.append("image", courseImageFile);
+    //         formData.append("folderName", course.courseId);
 
-            const response = await axios.post("/api/image-upload", formData);
+    //         const response = await axios.post("/api/image-upload", formData);
 
-            const data = await response.data;
+    //         const data = await response.data;
 
-            const imageUrl = await response.data.url;
+    //         const imageUrl = await response.data.url;
 
-            console.log("data", JSON.stringify(data));
+    //         console.log("data", JSON.stringify(data));
 
 
-            // try {
+    //         // try {
 
-            //     const result = await db.update(CourseList).set({
-            //         courseBanner: imageUrl
-            //     })
-            //         .where(eq(CourseList.courseId, course?.courseId))
-            //         .returning({ id: CourseList.id })
+    //         //     const result = await db.update(CourseList).set({
+    //         //         courseBanner: imageUrl
+    //         //     })
+    //         //         .where(eq(CourseList.courseId, course?.courseId))
+    //         //         .returning({ id: CourseList.id })
 
-            //     console.log("result", result)
+    //         //     console.log("result", result)
 
-            //     if (result[0] && result[0] !== undefined) {
+    //         //     if (result[0] && result[0] !== undefined) {
 
-            //         GetCourse();
+    //         //         GetCourse();
 
-            //         toast.success("Course updated successfully", {
-            //             className: "border border-primary",
-            //         })
+    //         //         toast.success("Course updated successfully", {
+    //         //             className: "border border-primary",
+    //         //         })
 
-            //     } else {
+    //         //     } else {
 
-            //         toast.error("Something went wrong. Please try again", {
-            //             className: "border border-primary",
-            //         })
-            //     }
+    //         //         toast.error("Something went wrong. Please try again", {
+    //         //             className: "border border-primary",
+    //         //         })
+    //         //     }
 
-            //     console.log("result", result)
+    //         //     console.log("result", result)
 
-            // } catch (error) {
+    //         // } catch (error) {
 
-            //     console.log("error", error)
+    //         //     console.log("error", error)
 
-            //     toast.error("Something went wrong. Please try again", {
-            //         className: "border border-primary",
-            //     })
-            // }
+    //         //     toast.error("Something went wrong. Please try again", {
+    //         //         className: "border border-primary",
+    //         //     })
+    //         // }
 
-        } catch (error) {
+    //     } catch (error) {
 
-            console.error("Error uploading image:", error);
-        }
-    }
+    //         console.error("Error uploading image:", error);
+    //     }
+    // }
 
     // const onFileChange = async (event) => {
     //     const file = event.target.files[0];
@@ -176,7 +177,9 @@ function FinishedCourseBasic({ course }) {
                             </div>
                         </div>
 
-                        <Button className="w-full mt-5" onClick={handleStartCourse}>Start Course</Button>
+                        <Link href={`/course/${course?.courseId}/view-course`}>
+                        <Button className="w-full mt-5">Start Course</Button>
+                        </Link>
                     </div>
                     {
                         courseImage ? (
