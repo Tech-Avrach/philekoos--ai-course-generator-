@@ -61,73 +61,72 @@ function ViewCourse({ params }) {
 
   return (
     <div className="flex">
-
-{course === "loading" && chapter === "loading" ? (
-  <div className="md:w-72 hidden md:block h-screen border-r shadow-sm">
-    <div className="flex gap-3 items-center justify-center h-20 bg-white">
-      <Image src="/logo.svg" alt="logo" width={40} height={40} />
-      <h1 className="text-2xl text-primary font-bold mt-1">Philekoos</h1>
-    </div>
-    <hr className="mt-[0.18rem]" />
-
-    <div className="flex flex-col gap-2 p-3">
-      {Array.from({ length: 12 }).map((_, index) => (
-        <div key={index} className="h-20 w-full bg-blue-200 animate-pulse"></div>
-      ))}
-    </div>
-  </div>
-) : (
-  // Chapter List Side Bar
-  <div className="md:w-72 hidden md:block h-screen border-r shadow-sm">
-    <div className="flex gap-3 items-center justify-center h-20 bg-white">
-      <Image src="/logo.svg" alt="logo" width={40} height={40} />
-      <h1 className="text-2xl text-primary font-bold mt-1">Philekoos</h1>
-    </div>
-    <hr className="mt-[0.18rem]" />
-
-    <h2 className="font-medium text-lg bg-primary text-white p-3 line-clamp-2">
-      {course?.courseOutput?.name}
-    </h2>
-
-    <div>
-      {course?.courseOutput?.chapters?.map((chapter, index) => (
-        <div
-          key={index}
-          className={`cursor-pointer ${
-            selectedChapter === index ? "bg-blue-200 hover:bg-blue-200" : "hover:bg-blue-100"
-          }`}
-          onClick={() => setSelectedChapter(index)}
-        >
-          <ChapterListCard chapter={chapter} index={index} />
+      {/* Sidebar */}
+      {course === "loading" && chapter === "loading" ? (
+        <div className="fixed md:w-72 hidden md:block h-screen border-r shadow-sm">
+          <div className="flex gap-3 items-center justify-center h-20 bg-white">
+            <Image src="/logo.svg" alt="logo" width={40} height={40} />
+            <h1 className="text-2xl text-primary font-bold mt-1">Philekoos</h1>
+          </div>
+          <hr className="mt-[0.18rem]" />
+          <div className="flex flex-col gap-2 p-3">
+            {Array.from({ length: 12 }).map((_, index) => (
+              <div key={index} className="h-20 w-full bg-blue-200 animate-pulse"></div>
+            ))}
+          </div>
         </div>
-      ))}
-    </div>
-  </div>
-)}
+      ) : (
+        <>
+          
+        <div className="fixed md:w-72 hidden md:block h-screen border-r shadow-sm overflow-scroll scrollbar-hide">
+
+        <div className="flex gap-3 items-center justify-center h-20 bg-white">
+            <Image src="/logo.svg" alt="logo" width={40} height={40} />
+            <h1 className="text-2xl text-primary font-bold mt-1">Philekoos</h1>
+          </div>
 
 
+          <hr className="mt-[0.18rem]" />
+          <div className=''>
+            <h2 className="font-medium text-lg bg-primary text-white p-3">
+              {course?.courseOutput?.name}
+            </h2>
+          </div>
+          <div>
+            {course?.courseOutput?.chapters?.map((chapter, index) => (
+              <div
+                key={index}
+                className={`cursor-pointer ${selectedChapter === index ? "bg-blue-200 hover:bg-blue-200" : "hover:bg-blue-100"
+                  }`}
+                onClick={() => setSelectedChapter(index)}
+              >
+                <ChapterListCard chapter={chapter} index={index} />
+              </div>
+            ))}
+          </div>
+        </div>
+        </>
+      )}
 
-
-
-
-{/* Course Details */ }
-<div className="flex-1">
-  <Header />
-  {/* Your page content */}
-  <div>
-    {course?.courseOutput?.chapters?.[selectedChapter] && chapter?.chapter?.[selectedChapter] ? (
-      <ChapterContent
-        chapter={course.courseOutput.chapters[selectedChapter]}
-        content={chapter.chapter[selectedChapter]}
-      />
-    ) : (
-      <div className="flex items-center justify-center h-[80vh]">
-        <AiOutlineLoading3Quarters className="text-6xl animate-spin" />
+      {/* Course Details */}
+      <div className="flex-1 md:ml-72">
+        <Header />
+        {/* Your page content */}
+        <div>
+          {course?.courseOutput?.chapters?.[selectedChapter] && chapter?.chapter?.[selectedChapter] ? (
+            <ChapterContent
+              chapter={course.courseOutput.chapters[selectedChapter]}
+              content={chapter.chapter[selectedChapter]}
+            />
+          ) : (
+            <div className="flex items-center justify-center h-[80vh]">
+              <AiOutlineLoading3Quarters className="text-6xl animate-spin" />
+            </div>
+          )}
+        </div>
       </div>
-    )}
-  </div>
-</div>
-</div >
+    </div>
+
   )
 }
 
