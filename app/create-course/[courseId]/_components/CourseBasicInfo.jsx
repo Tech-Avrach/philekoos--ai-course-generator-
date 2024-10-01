@@ -127,6 +127,8 @@ function CourseBasicInfo({ course, GetCourse }) {
 
                     let videoResponse = await service.getVideos(`${courseName}:${chapter}`);
                     let id = videoResponse[0]?.id?.videoId || "";
+
+                    console.log("video id inside getVideoUrlId", id)
                     
                     return id
     }
@@ -206,7 +208,11 @@ function CourseBasicInfo({ course, GetCourse }) {
 
                 try {
                     // Generate video URL
-                    const videoId = getVideoUrlId(course?.courseOutput?.name, chapter?.name)
+                    let videoId = await getVideoUrlId(course?.courseOutput?.name, chapter?.name)
+
+                    console.log("videoId in handleStartCourse", videoId)
+
+
 
                     // Generate chapter content
                     try {
