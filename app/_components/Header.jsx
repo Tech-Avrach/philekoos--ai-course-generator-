@@ -40,8 +40,10 @@ function Header({ showLogo = false }) {
         {
           showLogo ? (
             <>
+            <Link href={'/dashboard'}>
             <Image src="/logo.svg" alt="logo" width={50} height={50} />
             <h1 className="text-3xl text-primary font-bold mt-1">Philekoos</h1>
+            </Link>
             </>
           ) : null
         }
