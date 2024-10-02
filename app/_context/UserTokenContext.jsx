@@ -13,10 +13,6 @@ export const UserTokenProvider = ({ children }) => {
 
     const getUserTokens = async (email, userName) => {
 
-        console.log("email inside getUserTokens", email)
-
-        console.log("userName inside getUserTokens", userName)
-
         const result = await db
         .select()
         .from(Users)

@@ -18,7 +18,6 @@ function Header({ showLogo = false }) {
 
   useEffect(() => {
 
-    console.log("user in header", user)
 
     if (!user) {
       setLogin(false)
@@ -28,7 +27,6 @@ function Header({ showLogo = false }) {
       let email = user?.primaryEmailAddress?.emailAddress;
       let fullName = user?.fullName;
 
-      console.log("email", email, "fullName", fullName)
       getUserTokens(email, fullName)
 
     }

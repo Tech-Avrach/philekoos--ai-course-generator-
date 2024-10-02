@@ -10,7 +10,7 @@ import Link from 'next/link'
 
 
 
-function CourseCard({ course, refreshData }) {
+function CourseCard({ course, refreshData, displayUser=false}) {
 
     const handleOnDelete = async () => {
         const courseDeleteResult = await db.delete(CourseList).where(eq(CourseList.courseId, course?.courseId)).returning({ id: CourseList.id })
@@ -67,6 +67,10 @@ function CourseCard({ course, refreshData }) {
                     <h2 className="text-sm bg-blue-100 text-primary p-1 px-2 rounded-sm">
                         {course?.level}
                     </h2>
+                </div>
+                <div className='flex items-center gap-2 mt-3'>
+                    <Image src={course?.userProfileImage} alt={course?.name} width={35} height={35} className="w-8 h-8 rounded-full" />
+                    <h2 className='text-sm'>{course?.userName}</h2>
                 </div>
             </div>
         </div>

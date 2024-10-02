@@ -169,11 +169,12 @@ function CreateCourse() {
         name: userCourseInput?.topic,
         category: userCourseInput?.category,
         level: userCourseInput?.level,
-        imagePrompt: userCourseInput?.imagePrompt,
+        imagePrompt: courseLayout?.imagePrompt,
         courseOutput: courseLayout,
         createdBy: user?.primaryEmailAddress?.emailAddress,
         userName: user?.fullName,
-        userProfileImage: user?.imageUrl
+        userProfileImage: user?.imageUrl,
+        includeVideo: userCourseInput?.displayVideo
       })
       
       router.replace(`/create-course/${id}`)

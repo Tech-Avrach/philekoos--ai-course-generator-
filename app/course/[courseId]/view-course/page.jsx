@@ -15,6 +15,7 @@ import Image from 'next/image';
 import ChapterListCard from './_components/ChapterListCard';
 import ChapterContent from './_components/ChapterContent';
 import { AiOutlineLoading3Quarters } from 'react-icons/ai';
+import Link from 'next/link';
 
 function ViewCourse({ params }) {
 
@@ -59,6 +60,13 @@ function ViewCourse({ params }) {
     }
   }
 
+  const handleSelectChapter = (index) => {
+
+   window.scrollTo(0, 0);
+
+    setSelectedChapter(index);
+  }
+
   return (
     <div className="flex">
       {/* Sidebar */}
@@ -80,10 +88,12 @@ function ViewCourse({ params }) {
           
         <div className="fixed md:w-72 hidden md:block h-screen border-r shadow-sm overflow-scroll scrollbar-hide">
 
+        <Link href="/dashboard">
         <div className="flex gap-3 items-center justify-center h-20 bg-white">
             <Image src="/logo.svg" alt="logo" width={40} height={40} />
             <h1 className="text-2xl text-primary font-bold mt-1">Philekoos</h1>
           </div>
+          </Link>
 
 
           <hr className="mt-[0.18rem]" />
@@ -98,7 +108,7 @@ function ViewCourse({ params }) {
                 key={index}
                 className={`cursor-pointer ${selectedChapter === index ? "bg-blue-200 hover:bg-blue-200" : "hover:bg-blue-100"
                   }`}
-                onClick={() => setSelectedChapter(index)}
+                onClick={() => handleSelectChapter(index)}
               >
                 <ChapterListCard chapter={chapter} index={index} />
               </div>
@@ -116,7 +126,8 @@ function ViewCourse({ params }) {
           {course?.courseOutput?.chapters?.[selectedChapter] && chapter?.chapter?.[selectedChapter] ? (
             <ChapterContent
               chapter={course.courseOutput.chapters[selectedChapter]}
-              content={chapter.chapter[selectedChapter]}
+              content={chapter?.chapter[selectedChapter]}
+              includeVideo={course?.includeVideo}
             />
           ) : (
             <div className="flex items-center justify-center h-[80vh]">

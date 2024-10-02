@@ -56,6 +56,14 @@ function CourseBasicInfo({ course, GetCourse }) {
     }, [course])
 
 
+    useEffect(() => {
+
+        if (courseImageFile) {
+            uploadImageToCloudinary();
+        }
+    }, [courseImage, courseImageFile])
+
+
     // const handleStartCourse = async () => {
 
     //     useMistralAi();
@@ -154,10 +162,10 @@ function CourseBasicInfo({ course, GetCourse }) {
                 }
             })
 
-            editedChapterStatus[0].status = "progress";
+            // editedChapterStatus[0].status = "progress";
 
 
-            setChaptersDetailsToGenerate(editedChapterStatus);
+            // setChaptersDetailsToGenerate(editedChapterStatus);
 
             setLoading(true);
 
@@ -169,10 +177,11 @@ function CourseBasicInfo({ course, GetCourse }) {
 
                 console.log("The image is from Cloudinary!");
 
-            } else {
+            } 
+            // else {
                 
-                uploadImageToCloudinary()
-            }
+            //     await uploadImageToCloudinary()
+            // }
 
             const chapters = course?.courseOutput?.chapters;
             let errorOccurred = false;
