@@ -68,10 +68,13 @@ function CourseCard({ course, refreshData, displayUser=false}) {
                         {course?.level}
                     </h2>
                 </div>
-                <div className='flex items-center gap-2 mt-3'>
+                {
+                    displayUser && 
+                    <div className='flex items-center gap-2 mt-3'>
                     <Image src={course?.userProfileImage} alt={course?.name} width={35} height={35} className="w-8 h-8 rounded-full" />
                     <h2 className='text-sm'>{course?.userName}</h2>
                 </div>
+                }
             </div>
         </div>
     )

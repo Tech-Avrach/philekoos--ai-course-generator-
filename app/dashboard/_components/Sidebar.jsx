@@ -29,12 +29,12 @@ function Sidebar() {
             icon: <HiOutlineCreditCard /> ,
             path: "/dashboard/purchase"
         },
-        {
-            id: 1,
-            name: "Logout",
-            icon: <HiOutlineArrowRightOnRectangle /> ,
-            path: "/dashboard/logout"
-        },
+        // {
+        //     id: 1,
+        //     name: "Logout",
+        //     icon: <HiOutlineArrowRightOnRectangle /> ,
+        //     path: "/dashboard/logout"
+        // },
     ]
 
     const path = usePathname();
