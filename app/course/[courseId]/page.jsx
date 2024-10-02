@@ -36,7 +36,6 @@ function Course({ params }) {
   const GetCourse = async () => {
     const result = await db.select().from(CourseList).where(and(
       eq(CourseList.courseId, params.courseId),
-      eq(CourseList.createdBy, user?.primaryEmailAddress?.emailAddress)
     ))
 
     console.log("Course result", result)
