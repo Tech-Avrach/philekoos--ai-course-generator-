@@ -6,7 +6,7 @@ import { db } from '@/configs/db';
 import { CourseList } from '@/configs/schema';
 import toast from 'react-hot-toast';
 import { eq } from 'drizzle-orm';
-import { ReorderIcon } from './ReorderIcon';
+import { ReorderIcon } from './ReOrderIcon';
 
 
 function ChapterList({ course, GetCourse }) {

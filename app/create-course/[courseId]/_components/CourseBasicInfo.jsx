@@ -541,7 +541,7 @@ import { Button } from '@/components/ui/button';
 import Image from 'next/image';
 import React, { useState, useEffect, useCallback } from 'react';
 import { HiOutlinePuzzlePiece } from 'react-icons/hi2';
-import EditCourseBasicInfo from './EditCourseBasicInfo';
+
 import { LuBrain } from "react-icons/lu";
 import toast from 'react-hot-toast';
 import axios from 'axios';
@@ -555,6 +555,8 @@ import { useRouter } from 'next/navigation';
 import ChaptersDetailsProgress from './ChaptersDetailsProgress';
 import { useMistralAi } from '@/configs/MistralAiModel';
 import service from '@/configs/service';
+import EditCoursebasicInfo from './EditCoursebasicInfo';
+
 
 // Helper function to generate prompts for chapter detail and JSON correction
 const getChapterDetailPrompt = (courseName, chapter) => {
