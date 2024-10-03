@@ -773,7 +773,7 @@ function CourseBasicInfo({ course, GetCourse }) {
                     <div>
                         <div className="flex gap-3">
                             <h2 className="text-2xl font-bold">{course?.courseOutput?.name}</h2>
-                            <EditCourseBasicInfo course={course} GetCourse={GetCourse} />
+                            <EditCoursebasicInfo course={course} GetCourse={GetCourse} />
                         </div>
                         <p className="text-md text-gray-500 mt-3">{course?.courseOutput?.description}</p>
                         <div className="p-2 border border-primary mt-5 w-fit rounded-full bg-blue-50">
