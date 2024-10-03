@@ -39,8 +39,7 @@ function ViewCourse({ params }) {
 
   const GetCourse = async () => {
     const CourseResult = await db.select().from(CourseList).where(and(
-      eq(CourseList.courseId, params.courseId),
-      eq(CourseList.createdBy, user?.primaryEmailAddress?.emailAddress)
+      eq(CourseList.courseId, params.courseId)
     ))
 
     const ChapterResult = await db.select().from(Chapters).where(and(

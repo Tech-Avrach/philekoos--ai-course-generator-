@@ -27,11 +27,11 @@ function Course({ params }) {
   useEffect(() => {
     console.log("params", params)
 
-   if(params && user) {
+   if(params) {
     GetCourse();
    }
 
-  }, [params, user])
+  }, [params])
 
   const GetCourse = async () => {
     const result = await db.select().from(CourseList).where(and(
