@@ -50,11 +50,14 @@ function CourseCard({ course, refreshData, displayUser=false}) {
             <div className="p-3">
                 <div className="flex justify-between gap-2 items-center">
                     <h2 className="line-clamp-1 font-medium text-lg">{course?.courseOutput?.name}</h2>
-                    <div className="h-5 w-5 font-extrabold text-xl">
+                    {
+                        !displayUser && 
+                        <div className="h-5 w-5 font-extrabold text-xl">
                         <DropdownOption handleOnDelete={handleOnDelete}>
                             <HiEllipsisVertical />
                         </DropdownOption>
                     </div>
+                    }
                 </div>
 
                 <p className="text-sm text-gray-500 line-clamp-4 my-4">{course?.courseOutput?.description}</p>
