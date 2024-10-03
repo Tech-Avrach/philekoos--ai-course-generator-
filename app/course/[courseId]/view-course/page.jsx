@@ -30,11 +30,11 @@ function ViewCourse({ params }) {
   useEffect(() => {
     console.log("params", params)
 
-    if (params && user) {
+    if (params) {
       GetCourse();
     }
 
-  }, [params, user])
+  }, [params])
 
 
   const GetCourse = async () => {
