@@ -50,7 +50,7 @@ function ChapterContent({ chapter, content, includeVideo }) {
 
       {/* Content Section */}
       <div className="mt-5">
-        {content?.content.map((item, index) => (
+        {content?.content?.map((item, index) => (
           <div key={index} className="p-5 bg-blue-100 mb-3 rounded-lg">
             <h2 className="font-medium text-lg mb-2">{item.title}</h2>
             <ReactMarkdown className="text-gray-800 mb-2">{item.explanation}</ReactMarkdown>
