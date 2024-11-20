@@ -591,7 +591,7 @@ function CourseBasicInfo({ course, GetCourse }) {
 
     useEffect(() => {
         if (course?.courseBanner) {
-            setCourseImage(course.courseBanner);
+            setCourseImage(course?.courseBanner);
         }
         const chapterStatus = course?.courseOutput?.chapters?.map((chapter) => ({
             ...chapter,

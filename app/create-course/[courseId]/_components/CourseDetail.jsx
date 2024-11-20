@@ -82,7 +82,7 @@ function CourseDetail({ course }) {
                             No of Chapters
                         </h2>
                         <h2 className="font-medium text-lg">
-                            {course?.courseOutput?.chapters.length}
+                            {course?.courseOutput?.chapters?.length}
                         </h2>
                     </div>
                 </div>

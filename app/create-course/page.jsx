@@ -216,7 +216,7 @@ function CreateCourse() {
                     </div>
                     <h2 className="hidden md:block md:text-sm">{option.name}</h2>
                   </div>
-                  {index != StepperOptions.length - 1 && <div className={`w-[50px] h-[3px] rounded-full lg:w-[170px] ${activeIndex - 1 >= index ? "bg-primary" : "bg-gray-200"}`}></div>}
+                  {index != StepperOptions?.length - 1 && <div className={`w-[50px] h-[3px] rounded-full lg:w-[170px] ${activeIndex - 1 >= index ? "bg-primary" : "bg-gray-200"}`}></div>}
                 </div>
               ))
             }
@@ -243,11 +243,11 @@ function CreateCourse() {
         </Button>
 
         {
-          activeIndex !== StepperOptions.length - 1 && <Button onClick={() => handleNextButton()} >Next</Button>
+          activeIndex !== StepperOptions?.length - 1 && <Button onClick={() => handleNextButton()} >Next</Button>
         }
 
         {
-          activeIndex == StepperOptions.length - 1 && <Button onClick={() =>  HandleGenerateCourseLayout()} >Generate Course Layout</Button>
+          activeIndex == StepperOptions?.length - 1 && <Button onClick={() =>  HandleGenerateCourseLayout()} >Generate Course Layout</Button>
         }
       </div>
 
